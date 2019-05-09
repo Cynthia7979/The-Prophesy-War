@@ -8,4 +8,10 @@
 * Python为主要语言，Pygame为主要框架
 * 多人联机游戏
 
+## 框架
+[Pygame](https://www.pygame.org/news) - 游戏主体，多媒体
+
+## 贡献
 有兴趣的盆友欢迎联系我一起开发：CynthiaWang7979@hotmail.com
+
+[围观Trello Board](https://trello.com/b/WxonLBci/the-prophesy-war)
