@@ -18,13 +18,10 @@ class Card:
     _effect_description: str #效果描述
     #_bg_image: #背景图片
     #_effect_ID: int #效果ID
-
-
 class ItemCard(Card):
     """
     道具卡
     """
-
 
 class RitualCard(Card):
     """
