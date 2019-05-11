@@ -18,7 +18,7 @@ class Card:
     _effect_description: str #效果描述
     #_fg_image: #前景图片
     #_bg_image: #背景图片
-    effect_ID: str #效果ID
+    _effect_ID: str #效果ID
 
     def __init__(self, name: str, type: str, rarity: int, tag: [str], description: str,
                  effect_description: str, effect_ID: str):
@@ -28,7 +28,7 @@ class Card:
         self._tag = tag
         self._description = description
         self._effect_description = effect_description
-        self.effect_ID = effect_ID
+        self._effect_ID = effect_ID
 
 
 class ItemCard(Card):
@@ -48,4 +48,8 @@ class RitualCard(Card):
     def __init__(self, name: str, type: str, rarity: int, tag: [str], description: str,
                  effect_description: str, effect_ID: str):
         Card.__init__(self, name, type, rarity, tag, description, effect_description, effect_ID)
+
+
+    def get_effect_ID(str):
+        return self._effect_ID
 

@@ -3,7 +3,7 @@ import pygame
 from board import Board
 
 def main():
-    a = Board()
+    b = Board()
 
 
 if __name__=="__main__":

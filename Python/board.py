@@ -15,6 +15,7 @@ class Board:
 
     running: bool #whether this board is running or not
     screen: pygame.Surface
+    subscreen: [pygame.Surface]
 
     _player_array: [Player]
     _npc_array: [NPC]

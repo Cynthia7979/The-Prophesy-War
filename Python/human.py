@@ -15,6 +15,7 @@ class Human:
 class NPC(Human):
 
     _fate: int #运势值
+
    # _mission: Mission #持有任务
 
 
