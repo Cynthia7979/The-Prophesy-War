@@ -1,6 +1,6 @@
 
 from spirit import Spirit
-from card
+from card import Card, ItemCard, RitualCard
 
 
 class Human:
