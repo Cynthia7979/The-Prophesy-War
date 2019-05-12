@@ -1,7 +1,6 @@
+from .card import Card, ItemCard, RitualCard
 
-from card import Card, ItemCard, RitualCard
-
-from human import Player, NPC
+from .human import Player, NPC
 import pygame
 
 # Screen dimensions and coordinates
@@ -11,9 +10,10 @@ WIDTH = 800  # 1024
 HEIGHT = 600  # 768
 FONT_HEIGHT = 30                       # The height of the text display.
 
+
 class Board:
 
-    running: bool #whether this board is running or not
+    running: bool # whether this board is running or not
     screen: pygame.Surface
     subscreen: [pygame.Surface]
 
@@ -27,7 +27,6 @@ class Board:
 
     _current_player: Player
 
-
     def __init__(self):
 
         self.running = True
@@ -35,7 +34,6 @@ class Board:
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("SCP-CN-505 - The Prophcesy War 0.0a")
-
 
         self.start_game()
 
@@ -52,6 +50,3 @@ class Board:
                 if event.type == pygame.QUIT:
                     # change the value to False, to exit the main loop
                     self.running = False
-
-
-
