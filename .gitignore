@@ -1,0 +1,5 @@
+~$*.pptx
+*.pyc
+*.log
+!prophesy_war_client.log
+!prrphesy_war_server.log

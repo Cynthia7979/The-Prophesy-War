@@ -1,14 +1,24 @@
-class Effect:
-    def __init__(self, target, effect):
-        self.target = target
-        self.effect = effect
+import logger
+import re
 
-    def pack(self):
-        return "{target}|{effect}"
+string_code = {''}
+
+
+class Effect:
+    def __init__(self, target, code):
+        self.target = target
+        self.code = code
+
 
 def unpack(s: str):
     try:
-        target, effect = s.split("|")
-        return Effect(target, effect)
-    expect:
+        target, name, effect = s.split('|', 2)
+        code = """"""
+        try:
+            found = re.search('\[(.*)123]', s).group(1)
+            unpack(found)
+        except AttributeError:
+            pass
+
+    except ValueError:
         print("Wrong string for unpack")

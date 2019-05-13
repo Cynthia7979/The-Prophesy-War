@@ -23,11 +23,11 @@ class NPC(Human):
 class Player(Human):
     """
     金币
-声望
-分数
-手牌
-持有NPC
-已接任务
+    声望
+    分数
+    手牌
+    持有NPC
+    已接任务
 
     """
     def __init__(self, name, luck):

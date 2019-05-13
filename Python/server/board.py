@@ -13,7 +13,7 @@ FONT_HEIGHT = 30                       # The height of the text display.
 
 class Board:
 
-    running: bool # whether this board is running or not
+    running: bool  # whether this board is running or not
     screen: pygame.Surface
     subscreen: [pygame.Surface]
 
@@ -38,13 +38,13 @@ class Board:
         self.start_game()
 
     def start_game(self):
-
-        self.event_loop()
-
-    def event_loop(self):
         # main loop
         while self.running:
             # event handling, gets all event from the event queue
+            self.event_loop()
+
+    def event_loop(self):
+
             for event in pygame.event.get():
                 # only do something if the event is of type QUIT
                 if event.type == pygame.QUIT:
