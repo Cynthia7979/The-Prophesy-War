@@ -1,4 +1,5 @@
 import logging
+import sys
 from time import strftime
 from shutil import move
 
@@ -34,7 +35,6 @@ def logged_class(cls):
 
 
 def move_log():
-    default_fh.close()
     try:
         move('prophesy_war.log', strftime('Logs/log_%y-%m-%d_%H-%M-%S.log'))
     except OSError as e:
@@ -43,6 +43,14 @@ def move_log():
             public_logger.warning("Another program is using log file. Now exiting.")
         else:
             public_logger.error("Unexpected error when moving log file: {}".format(e))
+
+
+def exit():
+    public_logger.info('Ready to close.')
+    default_fh.close()
+    default_ch.close()
+    move_log()
+    sys.exit()
 
 
 default_ch = logging.StreamHandler().setLevel(logging.DEBUG)

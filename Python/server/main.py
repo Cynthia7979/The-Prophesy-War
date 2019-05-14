@@ -1,9 +1,12 @@
 # -*- coding: gb2312 -*-
 import pygame
 from .board import Board
+import threading
+
 
 def main():
-    b = Board()
+    games = []
+
 
 
 if __name__=="__main__":
