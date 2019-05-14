@@ -12,6 +12,7 @@
 
 ## 框架
 * [Pygame](https://www.pygame.org/news) - 游戏主体，多媒体
+* Socket - 联网模块
 
 ## 贡献
 感兴趣的scpper们欢迎联系我一起开发：CynthiaWang7979@hotmail.com
