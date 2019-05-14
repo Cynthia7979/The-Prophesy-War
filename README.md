@@ -1,5 +1,6 @@
 # 占卜大战
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br />
+[![知识共享许可协议](https://i.creativecommons.org/l/by-sa/3.0/88x31.png)](http://creativecommons.org/licenses/by-sa/3.0/)
+[![HitCount](http://hits.dwyl.io/Cynthia7979/The-Prophesy-War.svg)](http://hits.dwyl.io/Cynthia7979/The-Prophesy-War)
 
 ## 概念
 “占卜大战”是一个基于SCP作品的2D多人卡牌游戏。游戏中，玩家们通过不同的占卜方式和功能卡牌进行对战，最终以城市中最多NPC数量为胜利。
