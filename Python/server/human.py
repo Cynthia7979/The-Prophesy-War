@@ -16,7 +16,7 @@ class Human:
 class NPC(Human):
     def __init__(self, name, luck):
         Human.__init__(self, name, luck)
-        _fate: int   # 运势值
+        _fate: int    # 运势值
         mission = []  # 持有任务 class: Mission
 
 
@@ -32,9 +32,8 @@ class Player(Human):
     """
     def __init__(self, name, luck):
         Human.__init__(self, name, luck)
-        _coin: int
-        _prestige: int
-        _owned_npc: []  # class: NPC
-        _hand: []       # class: Card
-        _score: int
-        mission: []
+        coin: int
+        prestige: int  # 声望
+        owned_npc: []  # class: NPC
+        hand: []       # class: Card
+        mission: []     # 任务

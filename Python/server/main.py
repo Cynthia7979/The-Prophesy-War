@@ -5,10 +5,8 @@ import threading
 
 
 def main():
-    games = []
 
 
 
-if __name__=="__main__":
-    # call the main function
+if __name__ == '__main__':
     main()
