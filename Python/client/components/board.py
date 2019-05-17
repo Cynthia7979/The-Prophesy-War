@@ -10,7 +10,6 @@ FONT_HEIGHT = 30                       # The height of the text display.
 
 class Board(object):
     def __init__(self):
-        self.clients = []
         self.regions = []
 
     def start_game(self):
