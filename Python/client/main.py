@@ -5,10 +5,14 @@ import sys, os
 
 PORT = 50000
 SERVER = '127.0.0.1'  # In this case, localhost
-public_logger = logger.get_public_logger()
+PUBLIC_LOGGER = logger.get_public_logger()
+CLOCK = pygame.time.Clock()
+size = (1280, 720)
 
 
 def main():
+    pygame.init()
+    pygame.display.set_icon()
     while True:
         action = menu()
         if action == 'create':
@@ -58,3 +62,6 @@ def connect():
 def receive_game_data(sock):
     pass
 
+
+def image(path):
+    return pygame.image.load(path)

@@ -1,4 +1,3 @@
-from .human import Player, NPC
 import pygame
 
 # Screen dimensions and coordinates

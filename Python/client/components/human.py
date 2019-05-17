@@ -1,7 +1,5 @@
 # -*- coding: gb2312 -*-
 
-from .spirit import Spirit
-
 
 class Human:
     """
