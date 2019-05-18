@@ -1,3 +1,4 @@
+# -*- coding: gb2312 -*-
 import pygame
 import logger
 import socket
@@ -8,22 +9,22 @@ SERVER           = '127.0.0.1'  # In this case, localhost
 PUBLIC_LOGGER    = logger.get_public_logger()
 FPS              = 30
 WIN_SIZE         = (1280, 720)  # Should be adjustable by "Setting"
-current_win_size = WIN_SIZE
 WIDTH, HEIGHT    = (0, 1)       # Syntax sugar
+BASIC_FONT       = pygame.font.Font('resources/MedievalSharp.ttf')
+
+current_win_size = WIN_SIZE
 
 
 def main():
     global CLOCK, DISPLAY
     pygame.init()
     CLOCK = pygame.time.Clock()
-    DISPLAY = pygame.display.set_mode(WIN_SIZE)
+    DISPLAY = pygame.display.set_mode(current_win_size)
     pygame.display.set_icon(image('resources/icon_placeholder.png'))
     pygame.display.set_caption('Prophesy War a0.1')
     while True:
         action = menu()
-        if action == 'create':
-            pass
-        elif action == 'join':
+        if action == 'play':
             pass
         elif action == 'setting':
             setting()
@@ -36,7 +37,9 @@ def main():
 def menu():
     """
     Displays menu on DISPLAY Surface obj.
-    :return 'create': User clicked the
+    :return 'play': User clicked the "Start Game" (开始游戏) button
+    :return 'setting': User clicked the "Setting" (设置) button
+    :return 'exit': User clicked the "Exit" (退出) button
     Pseudo code:
 
     while True:
@@ -51,8 +54,12 @@ def menu():
             return 'exit'
         update(display)
     """
+    bg_image = image('resources/fake_background.png', resize=current_win_size)
+    bg_rect = pygame.Rect(bg_image.get_rect())
+    crystal_ball = image('resources/fake_crystal_ball.png')
+    logo = image('resources/fake_logo.png')
     while True:
-        pass
+
     return ""
 
 
@@ -73,7 +80,7 @@ def receive_game_data(sock):
     pass
 
 
-def image(path, resize=None, flip=None, spin=None):
+def image(path, resize=None, flip=None, spin=None, surf=None):
     """
     Loads an image file smartly. Works in resize -> flip -> spin order.
     :param path: String, image source
@@ -99,6 +106,7 @@ def image(path, resize=None, flip=None, spin=None):
     except Exception as e:
         PUBLIC_LOGGER.error('Unexpected exception when processing image file {img}: {ex}'.
                             format(img=path, ex=e))
+    return surf
 
 
 
