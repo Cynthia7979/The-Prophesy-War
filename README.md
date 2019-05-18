@@ -15,9 +15,10 @@
 * Socket - 联网模块
 
 ## 贡献
-感兴趣的scpper们欢迎联系我一起开发：CynthiaWang7979@hotmail.com
+感兴趣的scpper们欢迎加入讨论QQ群：786050136。
+进群后请阅读群公告并点击公告链接加入Trello Board。
 
-[Trello Board](https://trello.com/b/WxonLBci/the-prophesy-war)
+围观链接：[Trello Board](https://trello.com/b/WxonLBci/the-prophesy-war)
 
 ## 许可
 本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">知识共享署名-相同方式共享 3.0 未本地化版本许可协议</a>进行许可，基于[面包菌](http://scp-wiki-cn.wikidot.com/breaddddd-s-personnel-file)的[SCP-CN-505](http://scp-wiki-cn.wikidot.com/scp-cn-505)进行创建，为[SCP基金会](http://scp-wiki-cn.wikidot.com/)的衍生作品
