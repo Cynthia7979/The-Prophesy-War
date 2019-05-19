@@ -4,22 +4,20 @@ import logger
 import socket
 import sys, os
 
+pygame.init()
+
 PORT             = 50000
 SERVER           = '127.0.0.1'  # In this case, localhost
 PUBLIC_LOGGER    = logger.get_public_logger()
 FPS              = 30
 WIN_SIZE         = (1280, 720)  # Should be adjustable by "Setting"
 WIDTH, HEIGHT    = (0, 1)       # Syntax sugar
-BASIC_FONT       = pygame.font.Font('resources/MedievalSharp.ttf')
-
-current_win_size = WIN_SIZE
+CLOCK            = pygame.time.Clock()
+DISPLAY          = pygame.display.set_mode(WIN_SIZE)
+BASIC_FONT       = pygame.font.Font('resources/MedievalSharp.ttf', 28)
 
 
 def main():
-    global CLOCK, DISPLAY
-    pygame.init()
-    CLOCK = pygame.time.Clock()
-    DISPLAY = pygame.display.set_mode(current_win_size)
     pygame.display.set_icon(image('resources/icon_placeholder.png'))
     pygame.display.set_caption('Prophesy War a0.1')
     while True:
@@ -54,12 +52,21 @@ def menu():
             return 'exit'
         update(display)
     """
-    bg_image = image('resources/fake_background.png', resize=current_win_size)
-    bg_rect = pygame.Rect(bg_image.get_rect())
-    crystal_ball = image('resources/fake_crystal_ball.png')
-    logo = image('resources/fake_logo.png')
+    bg_image        = image('resources/fake_background.png', resize=WIN_SIZE)
+    bg_rect         = bg_image.get_rect()
+    bg_rect.topleft = (0, 0)
+    crystal_ball     = image('resources/fake_crystal_ball.png')
+    ball_rect        = crystal_ball.get_rect()
+    ball_rect.center = (WIN_SIZE[WIDTH]/2, WIN_SIZE[HEIGHT]/2)
+    logo             = image('resources/fake_logo.png')
+    logo_rect        = logo.get_rect()
+    logo_rect.midtop = (WIN_SIZE[WIDTH]/2, WIN_SIZE[HEIGHT]/5)
     while True:
-
+        DISPLAY.blit(bg_image, bg_rect)
+        DISPLAY.blit(crystal_ball, ball_rect)
+        DISPLAY.blit(logo, logo_rect)
+        pygame.display.flip()
+        CLOCK.tick(FPS)
     return ""
 
 
@@ -80,7 +87,7 @@ def receive_game_data(sock):
     pass
 
 
-def image(path, resize=None, flip=None, spin=None, surf=None):
+def image(path, resize=None, flip=None, spin=None):
     """
     Loads an image file smartly. Works in resize -> flip -> spin order.
     :param path: String, image source
@@ -93,7 +100,7 @@ def image(path, resize=None, flip=None, spin=None, surf=None):
     surf = pygame.image.load(path)
     try:
         if resize:
-            pygame.transform.scale(surf, resize, DestSurface=surf)
+            surf = pygame.transform.scale(surf, resize)
         if flip:  # TODO: May have bugs please test
             if flip == "v":
                 surf = pygame.transform.flip(surf, True, False)
@@ -102,12 +109,11 @@ def image(path, resize=None, flip=None, spin=None, surf=None):
             elif flip == "both":
                 surf = pygame.transform.flip(surf, True, True)
         if spin:
-            surf = pygame.transform.rotate(suf, spin)
+            surf = pygame.transform.rotate(surf, spin)
     except Exception as e:
         PUBLIC_LOGGER.error('Unexpected exception when processing image file {img}: {ex}'.
                             format(img=path, ex=e))
     return surf
-
 
 
 if __name__ == '__main__':
