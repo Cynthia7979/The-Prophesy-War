@@ -39,7 +39,7 @@ def logged_class(cls):
 
 def move_log():
     try:
-        move('prophesy_war.log', strftime('Logs/log_%y-%m-%d_%H-%M-%S.log'))
+        move('prophesy_war_client.log', strftime('Logs/log_%y-%m-%d_%H-%M-%S.log'))
     except OSError as e:
         # As when multiple launchers were opened at the same time
         if e.winerror == 32:
