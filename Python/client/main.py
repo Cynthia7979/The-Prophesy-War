@@ -14,7 +14,11 @@ WIN_SIZE         = (1280, 720)  # Should be adjustable by "Setting"
 WIDTH, HEIGHT    = (0, 1)       # Syntax sugar
 CLOCK            = pygame.time.Clock()
 DISPLAY          = pygame.display.set_mode(WIN_SIZE)
-BASIC_FONT       = pygame.font.Font('resources/MedievalSharp.ttf', 28)
+BASIC_FONT          = pygame.font.Font('resources/MedievalSharp.ttf', 28)
+BASIC_FONT_LARGE    = pygame.font.Font('resources/MedievalSharp.ttf', 72)
+BASIC_FONT_ZH       = pygame.font.Font('resources/ZCOOLXiaoWei-Regular.ttf', 28)
+BASIC_FONT_ZH_LARGE = pygame.font.Font('resources/ZCOOLXiaoWei-Regular.ttf', 72)
+BASIC_FONT_ZH_HUGE = pygame.font.Font('resources/ZCOOLXiaoWei-Regular.ttf', 180)
 
 
 def main():
@@ -58,9 +62,9 @@ def menu():
     crystal_ball     = image('resources/fake_crystal_ball.png')
     ball_rect        = crystal_ball.get_rect()
     ball_rect.center = (WIN_SIZE[WIDTH]/2, WIN_SIZE[HEIGHT]/2)
-    logo             = image('resources/fake_logo.png')
+    logo             = BASIC_FONT_ZH_HUGE.render("’º≤∑¥Û’Ω", True, (0,0,0))
     logo_rect        = logo.get_rect()
-    logo_rect.midtop = (WIN_SIZE[WIDTH]/2, WIN_SIZE[HEIGHT]/5)
+    logo_rect.midtop = (WIN_SIZE[WIDTH]/2, 1)
     while True:
         DISPLAY.blit(bg_image, bg_rect)
         DISPLAY.blit(crystal_ball, ball_rect)
@@ -113,6 +117,7 @@ def image(path, resize=None, flip=None, spin=None):
     except Exception as e:
         PUBLIC_LOGGER.error('Unexpected exception when processing image file {img}: {ex}'.
                             format(img=path, ex=e))
+        # FIXME: AttributeError: 'NoneType' object has no attribute 'level'
     return surf
 
 
