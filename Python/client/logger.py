@@ -4,8 +4,10 @@ from time import strftime
 from shutil import move
 
 default_level = logging.DEBUG
-default_ch = logging.StreamHandler().setLevel(logging.DEBUG)
-default_fh = logging.FileHandler('prophesy_war_client.log').setLevel(default_level)
+default_ch = logging.StreamHandler()
+default_ch.setLevel(logging.DEBUG)
+default_fh = logging.FileHandler('prophesy_war_client.log')
+default_fh.setLevel(default_level)
 
 def get_public_logger(name='client', loglevel='debug'):
     logger = logging.getLogger(name)
