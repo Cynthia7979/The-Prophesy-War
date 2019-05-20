@@ -4,10 +4,15 @@ from time import strftime
 from shutil import move
 
 default_level = logging.DEBUG
+default_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
 default_ch = logging.StreamHandler()
-default_ch.setLevel(logging.DEBUG)
 default_fh = logging.FileHandler('prophesy_war_client.log')
+default_ch.setLevel(logging.DEBUG)
 default_fh.setLevel(default_level)
+default_fh.setFormatter(default_formatter)
+default_ch.setFormatter(default_formatter)
+
 
 def get_public_logger(name='client', loglevel='debug'):
     logger = logging.getLogger(name)

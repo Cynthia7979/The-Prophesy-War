@@ -3,6 +3,7 @@ import pygame
 import socket
 import sys, os
 import components.logger as logger
+import components.json_editor as json
 from pygame.locals import *
 
 pygame.init()
@@ -11,7 +12,7 @@ PORT             = 50000
 SERVER           = '127.0.0.1'  # In this case, localhost
 PUBLIC_LOGGER    = logger.get_public_logger()
 FPS              = 30
-WIN_SIZE         = (1280, 720)  # Should be adjustable by "Setting"
+WIN_SIZE         = (1080, 720)  # TODO: Should be adjustable by "Setting"
 WIDTH, HEIGHT    = WIN_SIZE
 CLOCK            = pygame.time.Clock()
 DISPLAY          = pygame.display.set_mode(WIN_SIZE)
@@ -22,7 +23,7 @@ BASIC_FONT_HUGE  = pygame.font.Font('resources/MedievalSharp.ttf', 180)
 BASIC_FONT_ZH_NORM  = pygame.font.Font('resources/ZCOOLXiaoWei-Regular.ttf', 28)
 BASIC_FONT_ZH_LARGE = pygame.font.Font('resources/ZCOOLXiaoWei-Regular.ttf', 72)
 BASIC_FONT_ZH_HUGE  = pygame.font.Font('resources/ZCOOLXiaoWei-Regular.ttf', 180)
-
+#  TODO: Should also be adjustable
 
 
 
@@ -56,22 +57,36 @@ def menu():
     crystal_ball     = image('resources/fake_crystal_ball.png', resize=(HEIGHT/2, HEIGHT/1.78))
     ball_rect        = crystal_ball.get_rect()
     ball_rect.center = (WIDTH/2, HEIGHT-((HEIGHT-logo_rect.y-logo_rect.height)/2))
-    #                   正中                   logo下方区域的中心
+    #                     正中                  logo下方区域的中心
 
     start_button      = BASIC_FONT_ZH_NORM.render("开始游戏", True, (0,0,0))
     start_rect        = start_button.get_rect()
     start_rect.midtop = (WIDTH/2, ball_rect.y*1.4)
+    setting_button      = BASIC_FONT_ZH_NORM.render('设置', True, (0,0,0))
+    setting_rect        = setting_button.get_rect()
+    setting_rect.midtop = (WIDTH/2, start_rect.y+start_rect.height+ball_rect.y*0.15)
+    exit_button      = BASIC_FONT_ZH_NORM.render('退出', True, (0, 0, 0))
+    exit_rect        = setting_button.get_rect()
+    exit_rect.midtop = (WIDTH / 2, setting_rect.y + setting_rect.height + ball_rect.y * 0.15)
     while True:
         DISPLAY.blit(bg_image, bg_rect)
         DISPLAY.blit(crystal_ball, ball_rect)
         DISPLAY.blit(logo, logo_rect)
         DISPLAY.blit(start_button, start_rect)
+        DISPLAY.blit(setting_button, setting_rect)
+        DISPLAY.blit(exit_button, exit_rect)
         for event in pygame.event.get():  # Event loop
             if event.type == QUIT:
                 terminate()
+            elif event.type == MOUSEBUTTONUP:
+                if start_rect.collidepoint(event.pos):
+                    return 'play'
+                elif setting_rect.collidepoint(event.pos):
+                    return 'setting'
+                elif exit_rect.collidepoint(event.pos):
+                    return 'exit'
         pygame.display.flip()
         CLOCK.tick(FPS)
-    return ""
 
 
 def setting():
@@ -79,15 +94,6 @@ def setting():
 
 
 def game(sock):
-    pass
-
-
-def connect():
-    sock = socket.socket()
-    sock.connect(SERVER)
-
-
-def receive_game_data(sock):
     pass
 
 
