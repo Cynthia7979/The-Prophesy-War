@@ -3,7 +3,6 @@ import pygame
 import socket
 import sys, os
 import components.logger as logger
-import components.ui as ui
 from pygame.locals import *
 
 pygame.init()
@@ -16,12 +15,15 @@ WIN_SIZE         = (1280, 720)  # Should be adjustable by "Setting"
 WIDTH, HEIGHT    = WIN_SIZE
 CLOCK            = pygame.time.Clock()
 DISPLAY          = pygame.display.set_mode(WIN_SIZE)
-BASIC_FONT          = pygame.font.Font('resources/MedievalSharp.ttf', 28)
-BASIC_FONT_LARGE    = pygame.font.Font('resources/MedievalSharp.ttf', 72)
+
+BASIC_FONT_NORM  = pygame.font.Font('resources/MedievalSharp.ttf', 28)
+BASIC_FONT_LARGE = pygame.font.Font('resources/MedievalSharp.ttf', 72)
 BASIC_FONT_HUGE  = pygame.font.Font('resources/MedievalSharp.ttf', 180)
-BASIC_FONT_ZH       = pygame.font.Font('resources/ZCOOLXiaoWei-Regular.ttf', 28)
+BASIC_FONT_ZH_NORM  = pygame.font.Font('resources/ZCOOLXiaoWei-Regular.ttf', 28)
 BASIC_FONT_ZH_LARGE = pygame.font.Font('resources/ZCOOLXiaoWei-Regular.ttf', 72)
 BASIC_FONT_ZH_HUGE  = pygame.font.Font('resources/ZCOOLXiaoWei-Regular.ttf', 180)
+
+
 
 
 def main():
@@ -50,14 +52,20 @@ def menu():
     bg_rect.topleft = (0, 0)
     logo             = BASIC_FONT_ZH_HUGE.render("占卜大战", True, (0,0,0))
     logo_rect        = logo.get_rect()
-    logo_rect.midtop = (WIDTH/2, 1)
+    logo_rect.midtop = (WIDTH/2, HEIGHT*0.05)
     crystal_ball     = image('resources/fake_crystal_ball.png', resize=(HEIGHT/2, HEIGHT/1.78))
     ball_rect        = crystal_ball.get_rect()
     ball_rect.center = (WIDTH/2, HEIGHT-((HEIGHT-logo_rect.y-logo_rect.height)/2))
+    #                   正中                   logo下方区域的中心
+
+    start_button      = BASIC_FONT_ZH_NORM.render("开始游戏", True, (0,0,0))
+    start_rect        = start_button.get_rect()
+    start_rect.midtop = (WIDTH/2, ball_rect.y*1.4)
     while True:
         DISPLAY.blit(bg_image, bg_rect)
         DISPLAY.blit(crystal_ball, ball_rect)
         DISPLAY.blit(logo, logo_rect)
+        DISPLAY.blit(start_button, start_rect)
         for event in pygame.event.get():  # Event loop
             if event.type == QUIT:
                 terminate()
