@@ -32,6 +32,7 @@ def main():
     pygame.display.set_caption('Prophesy War a0.1')
     while True:
         action = menu()
+        print(action)
         if action == 'play':
             pass
         elif action == 'setting':

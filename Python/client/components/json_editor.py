@@ -1,8 +1,10 @@
+# Working directory: The-Prophesy-War/Python/client/
 import json
 import sys, os
 import components.logger as logger
 
 LOGGER = logger.get_public_logger('JSON_Editor')
+SETTING_FILE = 'settings.json'
 
 
 def check_lock(func):
@@ -16,7 +18,7 @@ def check_lock(func):
 @check_lock
 def update_settings(setting):
     data['settings'] = setting
-    with open('../settings.json', 'w') as f:
+    with open('settings.json', 'w') as f:
         json.dump(setting, f)
 
 
@@ -38,7 +40,7 @@ def main():
     data = {}
     lock = True
     try:
-        with open('../settings.json') as f:
+        with open('settings.json') as f:
             data['settings'] = json.load(f)
     except json.decoder.JSONDecodeError:
         LOGGER.warning('No data in settings.json')
