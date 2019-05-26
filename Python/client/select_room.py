@@ -80,7 +80,7 @@ def menu() -> str:
     room_page_surface_rect = room_page_surface.get_rect()
     room_page_surface_rect = (WIDTH/2,(HEIGHT / 12 * 9.125))
 
-
+    rooms = []
     r_width = int(WIDTH/3)
     r_height = int(HEIGHT/16)
 
@@ -96,9 +96,7 @@ def menu() -> str:
 
         rooms.append(Room(roomname,current_player,maxplayer,playing,surface))
 
-    rooms.pop(0) #上面这个初始化不知为何0位是错误的，我懒得改了，直接在这吐出去就好
-
-    for i in range(7):
+    for i in range(len(rooms)):
         #把7个框放到该放的位置
         rooms[i].rect = rooms[i].surface.get_rect()
         rooms[i].rect.topleft = ((r_width, HEIGHT / 12 * (2 + i)))
@@ -112,7 +110,7 @@ def menu() -> str:
         DISPLAY.blit(crystal_ball, ball_rect)
         DISPLAY.blit(logo, logo_rect)
 
-        for i in range(7):
+        for i in range(len(rooms)):
             DISPLAY.blit(rooms[i].surface, rooms[i].rect)
 
         DISPLAY.blit(l_arrow_image,l_arrow_rect)
@@ -127,6 +125,10 @@ def menu() -> str:
                     return 'L'
                 elif r_arrow_rect.collidepoint(event.pos):
                     return 'R'
+
+                for i in range(len(rooms)):
+                    if rooms[i].rect.collidepoint(event.pos):
+                        return rooms[i].room_name
         pygame.display.flip()
         CLOCK.tick(FPS)
 
