@@ -1,17 +1,19 @@
 import pygame
 
-class Room():
 
-    room_name: str  #房间名
-    current_player: int  #当前人数
-    max_player: int  #最多人数
-    playing: bool #游戏中？还是等待中？
+class Room(object):
+
+    """
+    Attributes:
+        room_name (str): The name of the room.
+        current_player (int): Current number of players.
+        max_player (int): Max player.
+        playing (bool): Playing or waiting.
+    """
 
     rect: pygame.rect
     surface: pygame.Surface
     state_line: pygame.Surface # 选择页面出现的那行字
-
-
 
     def __init__(self, r_n:str, c_p:int, m_p:int,p: bool, s: pygame.Surface):
         self.room_name = r_n

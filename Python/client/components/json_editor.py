@@ -5,49 +5,57 @@ import components.logger as logger
 
 LOGGER = logger.get_public_logger('JSON_Editor')
 SETTING_FILE = 'settings.json'
+DEFAULT = {'settings': {'resolution': (1080, 720), 'language': 'zh'}}
 
 
-def check_lock(func):
-    def lock_wrapper(*args, **kwargs):
-        while lock:
-            pass
-        return func(args, kwargs)
-    return lock_wrapper
+def update_settings(s):
+    """
+    Update settings.json.
+    :param s: Complete settings dict to save.
+    """
+    data['settings'] = s
+    with open(SETTING_FILE, 'w') as f:
+        json.dump(s, f)
+    LOGGER.info('settings.json was updated to {}.'.format(s))
 
 
-@check_lock
-def update_settings(setting):
-    data['settings'] = setting
-    with open('settings.json', 'w') as f:
-        json.dump(setting, f)
-
-
-@check_lock
 def get_settings(key=None, keys=None):
+    """
+    Get all settings, or the specific one(s) given.
+    :param key: Indicate which entry to return. Default None.
+    :param keys: Indicate which entries to return. Default None.
+    :return: Dict of all settings if no key specified.
+             String of an entry if :param key: given.
+             Dict of specified entries if :param keys: given.
+    """
     result = {}
     if keys:
-        for key in keys:
-            result[key] = data['settings'][key]
+        for k in keys:
+            try:
+                result[k] = data['settings'][k]
+            except KeyError:
+                result[k] = DEFAULT['settings'][k]
         return result
     elif key:
-        return data['settings'][key]
+        try:
+            return data['settings'][key]
+        except KeyError:
+            return DEFAULT['settings'][key]
     else:
         return data['settings']
 
 
 def main():
-    global data, lock
+    global data
     data = {}
-    lock = True
     try:
-        with open('settings.json') as f:
+        with open(SETTING_FILE) as f:
             data['settings'] = json.load(f)
     except json.decoder.JSONDecodeError:
         LOGGER.warning('No data in settings.json')
-        data = {'settings': {'resolution': (1080, 720)}}
-        with open('../settings.json', 'w') as f:
+        data = DEFAULT
+        with open(SETTING_FILE, 'w') as f:
             json.dump(data['settings'], f)
-    lock = False
 
 
 def close():
