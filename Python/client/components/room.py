@@ -1,4 +1,5 @@
 import pygame
+from .global_variable import *
 
 
 class Room(object):
@@ -11,28 +12,44 @@ class Room(object):
         playing (bool): Playing or waiting.
     """
 
-    rect: pygame.rect
-    surface: pygame.Surface
-    state_line: pygame.Surface # 选择页面出现的那行字
-
-    def __init__(self, r_n:str, c_p:int, m_p:int,p: bool, s: pygame.Surface):
+    def __init__(self, r_n:str, c_p:int, m_p:int,p: bool):
+        """
+        Initializes a Room object.
+        :param r_n: Room name.
+        :param c_p: Current # of player(s).
+        :param m_p: Max # of players.
+        :param p: Is the room in game or waiting to start.
+        """
         self.room_name = r_n
         self.current_player = c_p
         self.max_player = m_p
         self.playing = p
-        self.surface = s
+        self.surf = self.get_state_surf()
+        self.rect = self.surf.get_rect()
 
-        self.rect = self.surface.get_rect()
+    def set_state(self, r_n: str=None, c_p: int=None, m_p: int=None, p: bool=None):
+        """
+        Set (updates) the state of a room.
+        :param r_n: Room name.
+        :param c_p: Current # of player (s)
+        :param m_p: Max # of players.
+        :param p: Is the room in game or waiting to start.
+        """
+        if r_n: self.room_name = r_n
+        if c_p: self.current_player = c_p
+        if m_p: self.max_player = m_p
+        if p:   self.playing = p
 
-    def set_state(self, r_n:str, c_p:int, m_p:int,p: bool):
-        self.room_name = r_n
-        self.current_player = c_p
-        self.max_player = m_p
-        self.playing = p
-
-    def get_state_line(self) -> str:
+    def get_state_surf(self) -> pygame.Surface:
         if self.playing:
             p = "【游戏中】"
         else:
             p = "【等待中】"
-        return self.room_name + "              " + p + str(self.current_player) + "/" + str(self.max_player)
+        return font(SMALL).render(
+            "{name}              {state} {player}/{max}".format(name=self.room_name,
+                                                                state=p,
+                                                                player=self.current_player,
+                                                                max=self.max_player), True, BLACK)
+
+    def set_rect(self, rect):
+        self.rect = rect

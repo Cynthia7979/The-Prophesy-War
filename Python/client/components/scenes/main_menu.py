@@ -18,7 +18,7 @@ def main():
     bg_image        = image('resources/fake_background.png', resize=WIN_SIZE)
     bg_rect         = bg_image.get_rect()
     bg_rect.topleft = (0, 0)
-    logo             = BASIC_FONT_ZH_HUGE.render("占卜大战", True, (0,0,0))
+    logo             = font(HUGE).render("占卜大战", True, BLACK)
     logo_rect        = logo.get_rect()
     logo_rect.midtop = (WIDTH/2, HEIGHT*0.05)
     crystal_ball     = image('resources/fake_crystal_ball.png', resize=(HEIGHT/2, HEIGHT/1.78))
@@ -26,13 +26,13 @@ def main():
     ball_rect.center = (WIDTH/2, HEIGHT-((HEIGHT-logo_rect.y-logo_rect.height)/2))
     #                     正中                  logo下方区域的中心
 
-    start_button      = BASIC_FONT_ZH_NORM.render("开始游戏", True, (0,0,0))
+    start_button      = font(SMALL).render("开始游戏", True, BLACK)
     start_rect        = start_button.get_rect()
     start_rect.midtop = (WIDTH/2, ball_rect.y*1.4)
-    setting_button      = BASIC_FONT_ZH_NORM.render('设置', True, (0,0,0))
+    setting_button      = font(SMALL).render('设置', True, BLACK)
     setting_rect        = setting_button.get_rect()
     setting_rect.midtop = (WIDTH/2, start_rect.y+start_rect.height+ball_rect.y*0.15)
-    exit_button      = BASIC_FONT_ZH_NORM.render('退出', True, (0, 0, 0))
+    exit_button      = font(SMALL).render('退出', True, BLACK)
     exit_rect        = setting_button.get_rect()
     exit_rect.midtop = (WIDTH / 2, setting_rect.y + setting_rect.height + ball_rect.y * 0.15)
     while True:
