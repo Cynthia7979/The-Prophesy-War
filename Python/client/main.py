@@ -17,7 +17,9 @@ def main():
     while True:
         action = scenes.main_menu.main()
         if action == 'play':
+            scenes.interval.zoom_ball()
             scenes.select_room.main()
+            scenes.interval.shrink_ball()
         elif action == 'setting':
             setting()
         elif action == 'exit':

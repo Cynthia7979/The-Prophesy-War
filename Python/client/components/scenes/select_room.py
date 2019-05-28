@@ -1,9 +1,9 @@
 # -*- coding: gb2312 -*-
 import pygame
 import sys, os
-from components.global_variable import *
-import components.logger as logger
-from components.room import Room
+from ..global_variable import *
+from .. import logger
+from ..room import Room
 from pygame.locals import *
 
 PUBLIC_LOGGER = logger.get_public_logger('select_room')
@@ -51,10 +51,10 @@ def main():
         current_player = 0
         maxplayer = i
         playing = False
-        surface = pygame.Surface((r_width,r_height),pygame.SRCALPHA, 32)  # 这行和下面这行是网上抄的，用来把背景变透明
-        surface = surface.convert_alpha()
+        surface = pygame.Surface((r_width, r_height), pygame.SRCALPHA, 32)  # 这行和下面这行是网上抄的，用来把背景变透明
+        surface = surface.convert_alpha(surface)
 
-        rooms.append(Room(roomname,current_player,maxplayer,playing,surface))
+        rooms.append(Room(roomname, current_player, maxplayer, playing, surface))
 
     for i in range(len(rooms)):
         # 把7个框放到该放的位置
@@ -62,7 +62,7 @@ def main():
         rooms[i].rect.topleft = ((r_width, HEIGHT / 12 * (2 + i)))
         # 如果需要的话，在框里放上一行字
         rooms[i].stateline      = BASIC_FONT_ZH_NORM.render(rooms[i].get_state_line(), True, (0, 0, 0))
-        rooms[i].surface.blit(rooms[i].stateline,rooms[i].stateline.get_rect())
+        rooms[i].surface.blit(rooms[i].stateline, rooms[i].stateline.get_rect())
 
     while True:
         DISPLAY.blit(bg_image, bg_rect)
