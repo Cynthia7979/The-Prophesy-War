@@ -1,8 +1,11 @@
 import pygame
+import sys, os
 from math import ceil
 from components.logger import get_public_logger
 from .json_editor import get_settings
 
+if os.path.basename(os.getcwd()) == 'components':
+    os.chdir('../')
 pygame.font.init()
 
 PORT             = 50000

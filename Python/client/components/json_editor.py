@@ -3,6 +3,8 @@ import json
 import sys, os
 import components.logger as logger
 
+if os.path.basename(os.getcwd()) == 'components':
+    os.chdir('client')
 LOGGER = logger.get_public_logger('JSON_Editor')
 SETTING_FILE = 'settings.json'
 DEFAULT = {'settings': {'resolution': (1080, 720), 'language': 'zh'}}
