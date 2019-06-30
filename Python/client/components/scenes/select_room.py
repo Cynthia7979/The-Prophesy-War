@@ -7,8 +7,6 @@ from ..room import Room
 from pygame.locals import *
 
 PUBLIC_LOGGER = logger.get_public_logger('select_room')
-
-rooms = [Room]
 room_page = 1
 
 
@@ -41,16 +39,13 @@ def main():
     page_rect.midtop = (WIDTH/2,(HEIGHT / 12 * 9.125))
 
     rooms = []
-
-    for i in range(7):
-
-        # 下面这一段6行等真有list以后替换掉
+    for i in range(7):  # 下面这一段6行等真有list以后替换掉
         roomname = "房间" + str(i+1)
         current_player = 0
         maxplayer = i
         playing = False
 
-        rooms.append(Room(roomname, current_player, maxplayer, playing))
+        rooms.append(Room(roomname, i, current_player, maxplayer, playing))
 
     for i in range(len(rooms)):
         current_room = rooms[i]
@@ -64,12 +59,10 @@ def main():
         DISPLAY.blit(bg_image, bg_rect)
         DISPLAY.blit(crystal_ball, ball_rect)
         DISPLAY.blit(logo, logo_rect)
-
-        for i in range(len(rooms)):
+        for i in range(len(rooms)):  # FIXME: Should be only 7
             DISPLAY.blit(rooms[i].surf, rooms[i].rect)
-
-        DISPLAY.blit(l_arrow_image,l_arrow_rect)
-        DISPLAY.blit(r_arrow_image,r_arrow_rect)
+        DISPLAY.blit(l_arrow_image, l_arrow_rect)
+        DISPLAY.blit(r_arrow_image, r_arrow_rect)
         DISPLAY.blit(page_surface, page_rect)
 
         for event in pygame.event.get():  # Event loop
@@ -78,12 +71,15 @@ def main():
                 terminate()
             elif event.type == MOUSEBUTTONUP:
                 if l_arrow_rect.collidepoint(event.pos):
-                    return 'L'
+                    PUBLIC_LOGGER.debug('Arrow left')
                 elif r_arrow_rect.collidepoint(event.pos):
-                    return 'R'
-
+                    PUBLIC_LOGGER.debug('Arrow right')
+                elif not ball_rect.collidepoint(event.pos):
+                    PUBLIC_LOGGER.info('Background clicked, returning to main menu')
+                    return None
                 for i in range(len(rooms)):
                     if rooms[i].rect.collidepoint(event.pos):
+                        PUBLIC_LOGGER.debug(f'Room chosen: {rooms[i].room_id}')
                         return rooms[i].room_name
         pygame.display.flip()
         CLOCK.tick(FPS)

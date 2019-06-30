@@ -18,7 +18,9 @@ def main():
         action = scenes.main_menu.main()
         if action == 'play':
             scenes.interval.zoom_ball()
-            scenes.select_room.main()
+            room = scenes.select_room.main()
+            if room:
+                pass
             scenes.interval.shrink_ball()
         elif action == 'setting':
             setting()

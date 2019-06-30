@@ -12,7 +12,7 @@ class Room(object):
         playing (bool): Playing or waiting.
     """
 
-    def __init__(self, r_n:str, c_p:int, m_p:int,p: bool):
+    def __init__(self, r_n: str, r_id: int, c_p: int, m_p: int, p: bool):
         """
         Initializes a Room object.
         :param r_n: Room name.
@@ -20,10 +20,11 @@ class Room(object):
         :param m_p: Max # of players.
         :param p: Is the room in game or waiting to start.
         """
-        self.room_name = r_n
+        self.room_name      = r_n
+        self.room_id        = r_id
         self.current_player = c_p
-        self.max_player = m_p
-        self.playing = p
+        self.max_player     = m_p
+        self.playing        = p
         self.surf = self.get_state_surf()
         self.rect = self.surf.get_rect()
 
