@@ -1,4 +1,13 @@
 # -*- coding: gb2312 -*-
+from .global_variable import *
+
+
+class Hand:
+    def __init__(self, cards:tuple=()):
+        self.cards = list(cards)
+
+    def get_cards(self):
+        return self.cards
 
 
 class Card:
@@ -17,8 +26,6 @@ class Card:
     _tag: [str]
     _description: str  # 背景描述
     _effect_description: str  # 效果描述
-    # _fg_image: #前景图片
-    # _bg_image: #背景图片
     _effect_ID: str  # 效果ID
 
     def __init__(self, name: str, type: str, rarity: int, tag: [str], description: str,
@@ -30,6 +37,7 @@ class Card:
         self._description = description
         self._effect_description = effect_description
         self._effect_ID = effect_id
+        self.image = image('resources/fake_card.png', resize=(CARD_WIDTH, CARD_HEIGHT))
 
 
 class ItemCard(Card):
@@ -53,3 +61,5 @@ class RitualCard(Card):
 
     def get_effect_id(self):
         return self._effect_ID
+
+

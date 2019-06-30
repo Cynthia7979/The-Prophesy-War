@@ -13,6 +13,8 @@ SERVER           = '127.0.0.1'  # In this case, localhost
 FPS              = 30
 WIN_SIZE         = tuple(get_settings(key='resolution'))
 WIDTH, HEIGHT    = WIN_SIZE
+CARD_WIDTH       = WIDTH/5
+CARD_HEIGHT      = HEIGHT/2
 
 CLOCK            = pygame.time.Clock()
 DISPLAY          = pygame.display.set_mode(WIN_SIZE)
@@ -44,6 +46,7 @@ def font(size: int, lang=LANG):
     :param lang: Language of the font. Can be 'en' or 'zh'.
     :return: pygame.font.Font object.
     """
+    PUBLIC_LOGGER.debug(f'Returning font of lang: {lang}, size: {size}')
     return pygame.font.Font(INT_FONT[lang], size)
 
 
@@ -58,20 +61,25 @@ def image(path, resize=None, flip=None, spin=None):
     :return: pygame.Surface object
     """
     surf = pygame.image.load(path)
+    PUBLIC_LOGGER.debug(f'Image loaded: {path}')
     try:
         if resize:
             resize = [int(x) for x in resize]
             surf = pygame.transform.scale(surf, resize)
-        if flip:  # TODO: May have bugs please test
+            PUBLIC_LOGGER.debug(f'Image resized to {resize}')
+        if flip:
             if flip == "v":
                 surf = pygame.transform.flip(surf, True, False)
+                PUBLIC_LOGGER.debug('Image flipped vertically')
             elif flip == "h":
                 surf = pygame.transform.flip(surf, False, True)
+                PUBLIC_LOGGER.debug('Image flipped horizontally')
             elif flip == "both":
                 surf = pygame.transform.flip(surf, True, True)
+                PUBLIC_LOGGER.debug('Image flipped both vertically and horizontally')
         if spin:
             surf = pygame.transform.rotate(surf, spin)
+            PUBLIC_LOGGER.debug(f'Image spin to {spin} degrees')
     except Exception as e:
-        PUBLIC_LOGGER.error('Unexpected exception when processing image file {img}: {ex}'.
-                            format(img=path, ex=e))
+        PUBLIC_LOGGER.error(f'Unexpected exception when processing image file {path}: {e}')
     return surf

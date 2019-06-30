@@ -1,5 +1,4 @@
 # -*- coding: gb2312 -*-
-import pygame
 import sys, os
 from ..global_variable import *
 from .. import logger
@@ -21,7 +20,7 @@ def main():
     logo_rect        = logo.get_rect()
     logo_rect.midtop = (WIDTH/2, HEIGHT*0.05)
 
-    crystal_ball     = image('resources/fake_crystal_ball.png', resize=(HEIGHT/2*1.8 , HEIGHT/1.78*1.8))
+    crystal_ball     = image('resources/fake_crystal_ball.png', resize=(HEIGHT/2*1.8, HEIGHT/1.78*1.8))
     ball_rect        = crystal_ball.get_rect()
     ball_rect.center = (WIDTH/2, HEIGHT/2)
 
