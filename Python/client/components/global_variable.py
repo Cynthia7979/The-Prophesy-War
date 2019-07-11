@@ -26,6 +26,7 @@ INT_FONT = {'en': 'resources/MedievalSharp.ttf',
 EN = 'en'
 ZH = 'zh'
 LANG = get_settings('language')
+TINY  = ceil(15 * WIDTH/1080)
 SMALL = ceil(28 * WIDTH/1080)
 LARGE = ceil(72 * WIDTH/1080)
 HUGE = ceil(180 * WIDTH/1080)
