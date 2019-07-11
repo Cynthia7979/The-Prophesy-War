@@ -28,6 +28,7 @@ def main():
         DISPLAY.blit(bg_surf, bg_rect)
         show_gameboard(board_surf)
         show_hand(dummy_hand)
+        play_card(dummy_card)
         for event in pygame.event.get():  # Event loop
             if event.type == QUIT:
                 pygame.event.post(event)
@@ -77,7 +78,7 @@ def play_card(card: Card):
                 terminate()
         card_rect = card.image.get_rect()
         card_rect.center = (x, y)
-        GLOBAL_LOGGER.debug(f'Playing card "{card.get_name}", pos={(x, y)}')
+        GLOBAL_LOGGER.debug(f'Playing card "{card.get_name()}", pos={(x, y)}')
         DISPLAY.blit(card.image, card_rect)
         CLOCK.tick(FPS)
         pygame.display.flip()

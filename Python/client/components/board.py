@@ -1,29 +1,14 @@
 import pygame
 
-# Screen dimensions and coordinates
-ORIGIN = (0, 0)
-# You may adjust these values as you'd like, depending on your screen resolution
-WIDTH = 800  # 1024
-HEIGHT = 600  # 768
-FONT_HEIGHT = 30                       # The height of the text display.
-
 
 class Board(object):
-    def __init__(self):
-        self.regions = []
+    """
+    The tabletop of tabletop games.
+    """
 
-    def start_game(self):
-        # main loop
-        while self.running:
-            # event handling, gets all event from the event queue
-            self.event_loop()
-
-    def event_loop(self):
-
-            for event in pygame.event.get():
-                # only do something if the event is of type QUIT
-                if event.type == pygame.QUIT:
-                    # change the value to False, to exit the main loop
-                    self.running = False
+    def __init__(self, board_id: int, players: list):
+        self.board_id = board_id
+        self.players = players
+        self.shop = []
 
 
