@@ -1,9 +1,9 @@
 # -*- coding: gb2312 -*-
 import pygame
 import sys, os
-from .components import scenes
-from .components import logger
-from .components.global_variable import *
+from components import scenes
+from components import logger
+from components.global_variable import *
 from pygame.locals import *
 
 pygame.init()
@@ -36,8 +36,7 @@ def game(sock):
 
 
 def terminate():
-    logger.exit()
-    sys.exit()
+    global_quit()  # global_variable
 
 
 if __name__ == '__main__':

@@ -65,6 +65,5 @@ def main():
 
 
 def terminate():
-    logger.exit()
-    sys.exit()
+    global_quit()
 
