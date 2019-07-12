@@ -14,7 +14,8 @@ DURATION = FPS
 def zoom_ball(start=(HEIGHT / 2, HEIGHT / 1.78),
               end=(HEIGHT / 2 * 1.8, HEIGHT / 1.78 * 1.8),
               start_pos=(WIDTH / 2, HEIGHT * 0.65),
-              end_pos=(WIDTH / 2, HEIGHT / 2)):
+              end_pos=(WIDTH / 2, HEIGHT / 2),
+              duration=DURATION):
     original_ball = image(CRYSTAL_BALL, resize=start)
     original_rect = original_ball.get_rect()
     original_rect.center = start_pos
@@ -25,17 +26,18 @@ def zoom_ball(start=(HEIGHT / 2, HEIGHT / 1.78),
     DISPLAY.blit(bg, bg_rect)
     pygame.display.flip()
     (current_w, current_h), (current_x, current_y) = start, start_pos
-    for i in range(int(DURATION/2)):
+    for i in range(int(duration/2)):
         DISPLAY.blit(bg, bg_rect)
-        current_w += ceil((end[0] - start[0]) / DURATION)*2
-        current_h += ceil((end[1] - start[1]) / DURATION)*2
-        current_x += ceil((end_pos[0] - start_pos[0]) / DURATION)*2
-        current_y += ceil((end_pos[1] - start_pos[1]) / DURATION)*2
+        current_w += ceil((end[0] - start[0]) / duration)*2
+        current_h += ceil((end[1] - start[1]) / duration)*2
+        current_x += ceil((end_pos[0] - start_pos[0]) / duration)*2
+        current_y += ceil((end_pos[1] - start_pos[1]) / duration)*2
         scaled_ball = pygame.transform.scale(original_ball, (int(current_w), int(current_h)))
         scaled_rect = scaled_ball.get_rect()
         scaled_rect.center = (current_x, current_y)
         DISPLAY.blit(scaled_ball, scaled_rect)
         pygame.display.flip()
+        CLOCK.tick(FPS)
     DISPLAY.blit(bg, bg_rect)
     scaled_ball = image(CRYSTAL_BALL, resize=end)
     scaled_rect = scaled_ball.get_rect()
@@ -48,5 +50,6 @@ def zoom_ball(start=(HEIGHT / 2, HEIGHT / 1.78),
 def shrink_ball(start=(HEIGHT / 2 * 1.8, HEIGHT / 1.78 * 1.8),
                 end=(HEIGHT / 2, HEIGHT / 1.78),
                 start_pos=(WIDTH / 2, HEIGHT / 2),
-                end_pos=(WIDTH / 2, HEIGHT * 0.65)):
-    return zoom_ball(start, end, start_pos, end_pos)
+                end_pos=(WIDTH / 2, HEIGHT * 0.65),
+                duration=DURATION/2):
+    return zoom_ball(start, end, start_pos, end_pos, duration)

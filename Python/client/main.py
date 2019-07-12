@@ -1,11 +1,9 @@
 # -*- coding: gb2312 -*-
 import pygame
-import socket
 import sys, os
-import components.scenes as scenes
-import components.logger as logger
-import components.json_editor as json
-from components.global_variable import *
+from .components import scenes
+from .components import logger
+from .components.global_variable import *
 from pygame.locals import *
 
 pygame.init()

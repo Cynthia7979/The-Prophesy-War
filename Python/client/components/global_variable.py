@@ -1,7 +1,7 @@
 import pygame
 import sys, os
 from math import ceil
-from components.logger import get_public_logger
+from .logger import get_public_logger
 from .json_editor import get_settings
 
 if os.path.basename(os.getcwd()) == 'components':
@@ -15,6 +15,7 @@ WIN_SIZE         = tuple(get_settings(key='resolution'))
 WIDTH, HEIGHT    = WIN_SIZE
 CARD_WIDTH       = WIDTH/5
 CARD_HEIGHT      = HEIGHT/2
+CARD_DIMENSION   = (CARD_WIDTH, CARD_HEIGHT)
 
 CLOCK            = pygame.time.Clock()
 DISPLAY          = pygame.display.set_mode(WIN_SIZE)
