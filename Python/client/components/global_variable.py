@@ -1,7 +1,6 @@
 import pygame
 import sys, os
 import re
-import textwrap
 from . import logger
 from math import ceil
 from .json_editor import get_settings
@@ -79,27 +78,22 @@ def image(path, resize=None, flip=None, spin=None):
     :return: pygame.Surface object
     """
     surf = pygame.image.load(path)
-    PUBLIC_LOGGER.debug(f'Image loaded: {path}')
     try:
         if resize:
             resize = [int(x) for x in resize]
             surf = pygame.transform.scale(surf, resize)
-            PUBLIC_LOGGER.debug(f'Image resized to {resize}')
         if flip:
             if flip == "v":
                 surf = pygame.transform.flip(surf, True, False)
-                PUBLIC_LOGGER.debug('Image flipped vertically')
             elif flip == "h":
                 surf = pygame.transform.flip(surf, False, True)
-                PUBLIC_LOGGER.debug('Image flipped horizontally')
             elif flip == "both":
                 surf = pygame.transform.flip(surf, True, True)
-                PUBLIC_LOGGER.debug('Image flipped both vertically and horizontally')
         if spin:
             surf = pygame.transform.rotate(surf, spin)
-            PUBLIC_LOGGER.debug(f'Image spin to {spin} degrees')
     except Exception as e:
         PUBLIC_LOGGER.error(f'Unexpected exception when processing image file {path}: {e}')
+    PUBLIC_LOGGER.debug(f'Image loaded: {path}')
     return surf
 
 
@@ -127,7 +121,6 @@ def styled_text(raw, font_size):
         text = s[s.rfind('$')+1:]
         renders.append(font(font_size).render(text, True, rgbcode))
         texts.append(text)
-        PUBLIC_LOGGER.debug(f'Segment of styled text (color={rgbcode}, text={text}) rendered.')
     surf = pygame.Surface(font(font_size).render(''.join(texts), True, BLACK).get_rect().size, pygame.SRCALPHA)
     current_x = 0
     for r in renders:
@@ -135,7 +128,6 @@ def styled_text(raw, font_size):
         text_rect.topleft = (current_x, 0)
         surf.blit(r, text_rect)
         current_x = text_rect.right
-        PUBLIC_LOGGER.debug(f'Segment of styled text blit to surface, x={current_x}')
     PUBLIC_LOGGER.debug(f"Styled text '{raw}' returned")
     return surf.copy()
 

@@ -5,7 +5,7 @@ from .. import logger
 from ..room import Room
 from pygame.locals import *
 
-PUBLIC_LOGGER = logger.get_public_logger('select_room')
+SCENE_LOGGER = logger.get_public_logger('select_room')
 room_page = 1
 
 
@@ -13,6 +13,7 @@ def main():
     """
     Displays select room scene on components.global_variable.DISPLAY.
     """
+    SCENE_LOGGER.info('On select room')
     bg_image        = image('resources/fake_background.png', resize=WIN_SIZE)
     bg_rect         = bg_image.get_rect()
     bg_rect.topleft = (0, 0)
@@ -70,15 +71,15 @@ def main():
                 terminate()
             elif event.type == MOUSEBUTTONUP:
                 if l_arrow_rect.collidepoint(event.pos):
-                    PUBLIC_LOGGER.debug('Arrow left')
+                    SCENE_LOGGER.debug('Arrow left')
                 elif r_arrow_rect.collidepoint(event.pos):
-                    PUBLIC_LOGGER.debug('Arrow right')
+                    SCENE_LOGGER.debug('Arrow right')
                 elif not ball_rect.collidepoint(event.pos):
-                    PUBLIC_LOGGER.info('Background clicked, returning to main menu')
+                    SCENE_LOGGER.info('Background clicked, returning to main menu')
                     return None
                 for i in range(len(rooms)):
                     if rooms[i].rect.collidepoint(event.pos):
-                        PUBLIC_LOGGER.debug(f'Room chosen: {rooms[i].room_id}')
+                        SCENE_LOGGER.debug(f'Room chosen: {rooms[i].room_id}')
                         return rooms[i].room_name
         pygame.display.flip()
         CLOCK.tick(FPS)

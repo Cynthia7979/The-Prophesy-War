@@ -5,7 +5,7 @@ from pygame.locals import *
 from ..global_variable import *
 
 
-LOGGER = logger.get_public_logger('main_menu')
+SCENE_LOGGER = logger.get_public_logger('main_menu')
 
 
 def main():
@@ -15,6 +15,7 @@ def main():
     :return 'setting': User clicked the "Setting" (设置) button
     :return 'exit': User clicked the "Exit" (退出) button
     """
+    SCENE_LOGGER.info('On main menu')
     bg_image        = image('resources/fake_background.png', resize=WIN_SIZE)
     bg_rect         = bg_image.get_rect()
     bg_rect.topleft = (0, 0)

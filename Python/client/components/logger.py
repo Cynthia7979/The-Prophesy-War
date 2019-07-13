@@ -3,7 +3,14 @@ import sys
 from time import strftime
 from shutil import move
 
-default_level = logging.DEBUG
+STRLEVEL = {'debug': logging.DEBUG,
+            'info': logging.INFO,
+            'warning': logging.WARNING,
+            'error': logging.ERROR,
+            'critical': logging.CRITICAL}
+
+default_strlevel = 'info'
+default_level = STRLEVEL[default_strlevel]
 default_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 default_ch = logging.StreamHandler()
@@ -14,15 +21,11 @@ default_fh.setFormatter(default_formatter)
 default_ch.setFormatter(default_formatter)
 
 
-def get_public_logger(name='client', loglevel='debug'):
+def get_public_logger(name='client', loglevel=default_strlevel):
     logger = logging.getLogger(name)
-    strlevel = {'debug': logging.DEBUG,
-                'info': logging.INFO,
-                'warning': logging.WARNING,
-                'error': logging.ERROR,
-                'critical': logging.CRITICAL}
+
     try:
-        logger.setLevel(strlevel[loglevel])
+        logger.setLevel(STRLEVEL[loglevel])
     except KeyError:
         public_logger.warning('Logger "{name}" did not provide an available log level.'.format(name=name))
         logger.setLevel(default_level)
@@ -59,5 +62,6 @@ def exit():
     default_ch.close()
     move_log()
     sys.exit()
+
 
 public_logger = get_public_logger('global')

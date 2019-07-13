@@ -8,8 +8,10 @@ from pygame.locals import *
 
 pygame.init()
 
+GLOBAL_LOGGER = logger.get_public_logger()
 
 def main():
+    GLOBAL_LOGGER.info('Game started!')
     pygame.display.set_icon(image('resources/icon_placeholder.png'))
     pygame.display.set_caption('Prophesy War a0.1')
     while True:

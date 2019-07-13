@@ -1,11 +1,11 @@
-from math import ceil
-from os import getcwd
+from ..logger import get_public_logger
 from ..global_variable import *
 
 """
 Intervals between scenes.
 """
 
+SCENE_LOGGER = get_public_logger('interval')
 CRYSTAL_BALL = 'resources/fake_crystal_ball.png'
 BACKGROUND = 'resources/fake_background.png'
 DURATION = FPS
@@ -16,6 +16,7 @@ def zoom_ball(start=(HEIGHT / 2, HEIGHT / 1.78),
               start_pos=(WIDTH / 2, HEIGHT * 0.65),
               end_pos=(WIDTH / 2, HEIGHT / 2),
               duration=DURATION):
+    SCENE_LOGGER.info('Scaling ball...')
     original_ball = image(CRYSTAL_BALL, resize=start)
     original_rect = original_ball.get_rect()
     original_rect.center = start_pos
