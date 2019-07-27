@@ -12,4 +12,4 @@ This piece of work is licensed under [CC BY-SA 3.0](https://creativecommons.org/
 
 ## 图片协议 Image Licenses
 * [CC.png](https://github.com/Cynthia7979/The-Prophesy-War/blob/master/Python/client/resources/cc_logo.png)来自[Letters娱乐中心页](http://scp-wiki-cn.wikidot.com/letters)。
-* [St_Christina_College2.png](https://github.com/Cynthia7979/The-Prophesy-War/blob/master/Python/client/resources/St_Christina_College2.png)来自[中国相关组织](http://scp-wiki-cn.wikidot.com/groups-of-interest-cn#toc2)中的[St_Christina_College2.jpg](http://scp-wiki-cn.wdfiles.com/local--files/groups-of-interest-cn/St_Christina_College2.jpg)
+* [St_Christina_College2.png](https://github.com/Cynthia7979/The-Prophesy-War/blob/master/Python/client/resources/St_Christina_College2.png)修改自[中国相关组织](http://scp-wiki-cn.wikidot.com/groups-of-interest-cn#toc2)中的[St_Christina_College2.jpg](http://scp-wiki-cn.wdfiles.com/local--files/groups-of-interest-cn/St_Christina_College2.jpg)

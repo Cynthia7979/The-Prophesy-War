@@ -10,10 +10,12 @@ pygame.init()
 
 GLOBAL_LOGGER = logger.get_public_logger()
 
+
 def main():
     GLOBAL_LOGGER.info('Game started!')
-    pygame.display.set_icon(image('resources/icon_placeholder.png'))
+    pygame.display.set_icon(image('resources/icon_placeholder.png'))  # global_variable
     pygame.display.set_caption('Prophesy War a0.1')
+    load()
     while True:
         action = scenes.main_menu.main()
         if action == 'play':
@@ -34,6 +36,10 @@ def setting():
 
 
 def game(sock):
+    pass
+
+
+def load():
     pass
 
 
