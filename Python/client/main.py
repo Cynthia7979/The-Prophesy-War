@@ -6,7 +6,6 @@ from components import logger
 from components.global_variable import *
 from pygame.locals import *
 
-pygame.init()
 
 GLOBAL_LOGGER = logger.get_public_logger()
 
@@ -22,21 +21,16 @@ def main():
             scenes.interval.zoom_ball()
             room = scenes.select_room.main()
             if room:
-                scenes.game.main()
+                scenes.game.main(room)
             scenes.interval.shrink_ball()
         elif action == 'setting':
-            setting()
+            scenes.setting.load()
+            scenes.interval.zoom_ball()
+            scenes.setting.main()
+            scenes.interval.shrink_ball()
         elif action == 'exit':
             break
     terminate()
-
-
-def setting():
-    pass
-
-
-def game(sock):
-    pass
 
 
 def load():

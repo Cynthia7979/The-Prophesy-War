@@ -17,9 +17,10 @@ def main():
     bg_image        = image('resources/fake_background.png', resize=WIN_SIZE)
     bg_rect         = bg_image.get_rect()
     bg_rect.topleft = (0, 0)
-    logo             = font(LARGE-2).render("创建房间", True, BLACK)
-    logo_rect        = logo.get_rect()
-    logo_rect.midtop = (WIDTH/2, HEIGHT*0.05)
+
+    create             = font(LARGE-2).render("创建房间", True, BLACK)
+    create_rect        = create.get_rect()
+    create_rect.midtop = (WIDTH/2, HEIGHT*0.05)
 
     crystal_ball     = image('resources/fake_crystal_ball.png', resize=(HEIGHT/2*1.8, HEIGHT/1.78*1.8))
     ball_rect        = crystal_ball.get_rect()
@@ -58,7 +59,7 @@ def main():
     while True:
         DISPLAY.blit(bg_image, bg_rect)
         DISPLAY.blit(crystal_ball, ball_rect)
-        DISPLAY.blit(logo, logo_rect)
+        DISPLAY.blit(create, create_rect)
         for i in range(len(rooms)):  # FIXME: Should be only 7
             DISPLAY.blit(rooms[i].surf, rooms[i].rect)
         DISPLAY.blit(l_arrow_image, l_arrow_rect)

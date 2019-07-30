@@ -7,6 +7,7 @@ if os.path.basename(os.getcwd()) == 'components':
     os.chdir('client')
 LOGGER = logger.get_public_logger('JSON_Editor')
 SETTING_FILE = 'settings.json'
+SETTING_LIST_FILE = 'settings_list.json'
 DEFAULT = {'settings': {'resolution': (1080, 720), 'language': 'zh'}}
 
 
@@ -45,6 +46,11 @@ def get_settings(key=None, keys=None):
             return DEFAULT['settings'][key]
     else:
         return data['settings']
+
+
+def get_settings_list():
+    with open(SETTING_LIST_FILE, encoding="UTF-8") as sl:
+        return json.load(sl, encoding="UTF-8")
 
 
 def main():
