@@ -23,6 +23,7 @@ DISPLAY          = pygame.display.set_mode(WIN_SIZE)
 
 BLACK = (0  , 0  , 0  )
 WHITE = (255, 255, 255)
+GREY  = (127, 127, 127)
 
 INT_FONT = {'en': 'resources/MedievalSharp.ttf',
             'zh': 'resources/ZCOOLXiaoWei-Regular.ttf'}
@@ -58,7 +59,6 @@ def font(size: int, lang=LANG):
         del font_cache[list(font_cache.keys())[-1]]
     try:
         f = font_cache[(size, lang)]
-        PUBLIC_LOGGER.debug(f'Font of lang: {lang}, size: {size} found in cache')
         return f
     except KeyError:
         f = pygame.font.Font(INT_FONT[lang], size)
@@ -130,6 +130,15 @@ def styled_text(raw, font_size):
         current_x = text_rect.right
     PUBLIC_LOGGER.debug(f"Styled text '{raw}' returned")
     return surf.copy()
+
+
+def shadowed_text(text, size, color=BLACK, shadow_color=GREY):
+    shadow = font(size).render(text, True, shadow_color)
+    text = font(size).render(text, True, color)
+    text_rect = text.get_rect()
+    text_rect.topleft = (-2, -2)
+    shadow.blit(text, text_rect)
+    return shadow
 
 
 def global_quit():

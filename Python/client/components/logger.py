@@ -9,7 +9,7 @@ STRLEVEL = {'debug': logging.DEBUG,
             'error': logging.ERROR,
             'critical': logging.CRITICAL}
 
-default_strlevel = 'info'
+default_strlevel = 'debug'
 default_level = STRLEVEL[default_strlevel]
 default_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
