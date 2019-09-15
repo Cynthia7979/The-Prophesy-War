@@ -1,12 +1,13 @@
 import pygame
 import sys, os
-import re
-from . import logger
 from math import ceil
+import re
+if os.path.basename(os.getcwd()) == 'client':
+    os.chdir('components/')
+from . import logger
 from .json_editor import get_settings
 
-if os.path.basename(os.getcwd()) == 'components':
-    os.chdir('../')
+
 pygame.font.init()
 
 PORT             = 50000
@@ -128,7 +129,7 @@ def styled_text(raw, font_size):
         text_rect.topleft = (current_x, 0)
         surf.blit(r, text_rect)
         current_x = text_rect.right
-    PUBLIC_LOGGER.debug(f"Styled text '{raw}' returned")
+    #PUBLIC_LOGGER.debug(f"Styled text '{raw}' returned")
     return surf.copy()
 
 
@@ -141,8 +142,24 @@ def shadowed_text(text, size, color=BLACK, shadow_color=GREY):
     return shadow
 
 
+def strip_styled_text(text):
+    result = {}
+    split = text.split('`')
+    for segment in split:
+        try:
+            hexcode = re.search('\$(.*)\$', segment).group(1)
+        except (AttributeError, ValueError):
+            hexcode = '000000'
+        text = segment[segment.rfind('$') + 1:]
+        result[text] = hexcode
+    return result
+
+
 def global_quit():
     pygame.font.quit()
     pygame.quit()
     logger.exit()
     sys.exit()
+
+
+print(strip_styled_text('$FF0000$red`black'))

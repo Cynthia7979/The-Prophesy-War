@@ -20,6 +20,11 @@ SIDEBAR_HIDE_IMAGE = image('resources/fake_sidebar_hide.png', resize=(WIDTH / 50
 
 
 def main():
+    """
+    Shows and plays the game.
+    Client won't process any calculation. Only the host processes the game.
+    :return: None
+    """
     SCENE_LOGGER.info(f'Game started at room_placeholder')
     dragging_board = False
     mouse_pos_cache = None
@@ -28,7 +33,8 @@ def main():
     sidebar = True
     real_width = WIDTH - (SIDEBAR_WIDTH * sidebar)
 
-    dummy_card = Card('', '', 1, [], '', '', '')
+    dummy_background = image('resources/background.png', resize=(CARD_WIDTH, CARD_HEIGHT))
+    dummy_card = ItemCard('', '', 1, 10, '', '', '', dummy_background)
     dummy_hand = Hand((dummy_card,)*10)
     dummy_mission = Mission('$8B0000$Dr. Bright`遗失了他的`$999999$682专用报纸筒', 1)
 
@@ -77,6 +83,13 @@ def main():
 
 
 def show_gameboard(board_surf, board_center_pos, board_scale):
+    """
+    Shows gameboard (The circle thing) for one frame
+    :param board_surf: Surface to blit to
+    :param board_center_pos: Center of the circle
+    :param board_scale: How big (or small) is the board. E.g. 2 means 2x bigger
+    :return: None
+    """
     board_surf = pygame.transform.scale(board_surf, (int(BOARD_WIDTH*board_scale), int(BOARD_HEIGHT*board_scale)))
     board_rect = board_surf.get_rect()
     board_rect.center = board_center_pos
@@ -84,6 +97,12 @@ def show_gameboard(board_surf, board_center_pos, board_scale):
 
 
 def show_hand(h: Hand, aval_width):
+    """
+    Shows cards in hand
+    :param h: Hand
+    :param aval_width: Available width for hand display. If sidebar is shown, it will be WIDTH-sidebar. If not then WIDTH
+    :return: None
+    """
     y = HEIGHT * 1.1
     avl_width = aval_width - CARD_WIDTH/2 - 10
     fold_width = CARD_WIDTH - avl_width / len(h.get_cards())
@@ -97,6 +116,11 @@ def show_hand(h: Hand, aval_width):
 
 
 def play_card(card: Card):
+    """
+    Displays the play card animation
+    :param card: Which card to play
+    :return: None
+    """
     screen = DISPLAY.copy()
     screen.convert_alpha()
     black_mask = pygame.Surface((WIDTH, HEIGHT), flags=SRCALPHA)
@@ -124,6 +148,14 @@ def play_card(card: Card):
 
 
 def show_sidebar(sidebar, missions, mission_page, chat_history):
+    """
+    Shows sidebar, including missions and chat
+    :param sidebar: Is sidebar shown or not
+    :param missions: Missions the player accepted
+    :param mission_page: Current page of mission. E.g. 1 for the first page
+    :param chat_history: Dict of {styled_username: what_they_say}
+    :return: None
+    """
     if sidebar:
         sidebar_rect = SIDEBAR_IMAGE.get_rect()
         sidebar_rect.midright = (WIDTH, HEIGHT/2)
@@ -135,37 +167,78 @@ def show_sidebar(sidebar, missions, mission_page, chat_history):
         mission_title_rect = mission_title_surf.get_rect()
         mission_title_rect.topleft = (SIDEBAR_LEFT, 10)
         DISPLAY.blit(mission_title_surf, mission_title_rect)
-
         mission_slice = missions[mission_page:mission_page+4]
         current_y = mission_title_rect.bottom*1.3
         for n, m in enumerate(mission_slice):
             start_of_a_mission = True
-            for s in textwrap.wrap(m.description, 14):  # It cuts off styled text, FIXME
+            mod_m_description = strip_styled_text(m.description)
+            current_text = []
+            current_styled_text = []
+            for segment, segment_color in mod_m_description.items():
                 if start_of_a_mission:
-                    s = f'{2 * mission_page + 1 + n}. `{s}'
-                    start_of_a_mission = not start_of_a_mission
+                    number = 2 * mission_page + 1 + n
+                    styled = f'{number}. `${segment_color}${segment}'
+                    current_text.append(f'{number}. {segment}')
+                    current_styled_text.append(styled)
+                    start_of_a_mission = False
                 else:
-                    s = f'  `{s}'
-                text_surf = styled_text(s, TINY)
+                    styled = f'  `${segment_color}${segment}'
+                    current_text.append(segment)
+                    if len(''.join(current_text)) > 14:  # Text is too long
+                        cache = current_text.pop()  # Temporarily store this piece of text
+                        # Display what we have now
+                        text_surf = styled_text(''.join(current_styled_text), TINY)
+                        text_rect = text_surf.get_rect()
+                        text_rect.topleft = (SIDEBAR_LEFT, current_y)
+                        DISPLAY.blit(text_surf, text_rect)
+                        # Start a new line
+                        current_y = text_rect.bottom + 5
+                        current_text = [cache]
+                        current_styled_text = [styled]
+                    else:
+                        current_styled_text.append(styled)
+            if current_styled_text:
+                text_surf = styled_text(''.join(current_styled_text), TINY)
                 text_rect = text_surf.get_rect()
                 text_rect.topleft = (SIDEBAR_LEFT, current_y)
                 DISPLAY.blit(text_surf, text_rect)
                 current_y = text_rect.bottom + 5
             current_y += 5
+            # End of a mission
+
+        # Chat
+
+
+
 
     else:
+        # Shows the arrow
         sidebar_rect = SIDEBAR_HIDE_IMAGE.get_rect()
         sidebar_rect.midright = (WIDTH, HEIGHT/2)
         DISPLAY.blit(SIDEBAR_HIDE_IMAGE, sidebar_rect)
 
 
-def is_drag_board(pos, board_center_pos, board_surf):
+def is_drag_board(pos, board_center_pos, board_surf):  # TODO: 添加侧边栏检测，如点到侧边栏就判定为False
+    """
+    Is the current pos of mouse on gameboard
+    :param pos: Pos of mouse
+    :param board_center_pos: Center of gameboard
+    :param board_surf: Surface of gameboard
+    :return: Bool.
+    """
     board_rect = board_surf.get_rect()
     board_rect.center = board_center_pos
     return board_rect.collidepoint(pos)
 
 
 def get_new_board_center_pos(new_pos, old_pos, board_center_pos):
+    """
+    Move the board by the movement of mouse pos
+    :param new_pos: New mouse pos
+    :param old_pos: Old mouse pos (preferably from the last frame)
+    :param board_center_pos: Center of the gameboard
+    :return: Tuple. New pos for the center of gameboard.
+    """
     pos_alter = tuple([new_pos[x]-old_pos[x] for x in (0,1)])
     return tuple([board_center_pos[x] + pos_alter[x] for x in (0,1)])
 

@@ -2,57 +2,64 @@
 from .global_variable import *
 
 
-class Card:
-    """
-    类型
-    稀有度
-    标签
-    名称
-    介绍
-    效果
-    正面？/负面？
-    """
-    _name: str  # 卡名
-    _type: str
-    _rarity: int
-    _tag: [str]
-    _description: str  # 背景描述
-    _effect_description: str  # 效果描述
-    _effect_ID: str  # 效果ID
+foreground = image('./resources/foreground.png', CARD_DIMENSION)
 
-    def __init__(self, name: str, type: str, rarity: int, tag: [str], description: str,
-                 effect_description: str, effect_id: str):
-        self._name = name
-        self._type = type
+
+class Card:
+    """Base class"""
+    def __init__(self, name, kind, usage, rarity, countdown, description, effect_description, effect,
+                 background_img: pygame.Surface, foreground_img: pygame.Surface, tag=None):
+        if tag:
+            self._tag = tag
+        self.name = name
+        self.type = kind
+        self.usage = usage
         self._rarity = rarity
-        self._tag = tag
+        self._countdown = countdown
         self._description = description
         self._effect_description = effect_description
-        self._effect_ID = effect_id
-        self.image = image('resources/fake_card.png', resize=(CARD_WIDTH, CARD_HEIGHT))
+        self._effect = effect
+        self._bg = background_img
+        self._fg = foreground_img
+        self.image = self.get_image()
 
-    def get_name(self):
-        return self._name
+    def __set__(self, instance, value):
+        raise TypeError(f'Card instance cannot change value: {instance} -> {value}')
+
+    def activate(self, board):
+        self._effect.activate(board)
+        self._countdown -= 1
+        if self._countdown <= 0:
+            return False  # Expired
+
+    def reset_activation(self, func):
+        """
+        Sets the self.activate method
+        :param func: New activate method
+        :return: None
+        """
+        ItemCard.activate = func
+
+    def get_image(self):
+        img_surf = pygame.Surface((CARD_WIDTH, CARD_HEIGHT), flags=pygame.SRCALPHA)
+        img_surf.blit(self._bg, (0,0))
+        img_surf.blit(self._fg, (0,0))
+        return img_surf
 
 
 class ItemCard(Card):
-    """
-    道具卡
-    """
-
-    def __init__(self, name: str, type: str, rarity: int, tag: [str], description: str,
-                 effect_description: str, effect_id: str):
-        Card.__init__(self, name, type, rarity, tag, description, effect_description, effect_id)
+    """道具卡"""
+    def __init__(self, name, usage, rarity, countdown, description, effect_description, effect, img, tag=None):
+        if rarity < 1 or rarity > 5:
+            raise ValueError(f'Rarity "{rarity}" out of range (1~5)')
+        super().__init__(name, 'item', usage, rarity, countdown, description, effect_description, effect, img,
+                         foreground, tag)
 
 
 class RitualCard(Card):
-    """
-    仪式卡
-    """
-
-    def __init__(self, name: str, type: str, rarity: int, tag: [str], description: str,
-                 effect_description: str, effect_id: str):
-        Card.__init__(self, name, type, rarity, tag, description, effect_description, effect_id)
-
-    def get_effect_id(self):
-        return self._effect_ID
+    """仪式卡"""
+    def __init__(self, name, usage, rarity, countdown, description, effect_description, effect, img, tag=None):
+        if rarity < 1 or rarity > 3:
+            raise ValueError(f'Rarity "{rarity}" out of range (1~3)')
+        super().__init__(name, 'ritual', usage, rarity, countdown, description, effect_description, effect, img,
+                         foreground, tag)

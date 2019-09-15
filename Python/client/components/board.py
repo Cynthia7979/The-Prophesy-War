@@ -3,7 +3,7 @@ import pygame
 
 class Board(object):
     """
-    The tabletop of tabletop games.
+    The gameboard.
     """
 
     def __init__(self, board_id: int, players: list):

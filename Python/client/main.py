@@ -21,7 +21,7 @@ def main():
             scenes.interval.zoom_ball()
             room = scenes.select_room.main()
             if room:
-                scenes.game.main(room)
+                scenes.game.main()  # pass room
             scenes.interval.shrink_ball()
         elif action == 'setting':
             scenes.setting.load()

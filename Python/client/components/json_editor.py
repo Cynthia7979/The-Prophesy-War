@@ -1,10 +1,12 @@
 # Working directory: The-Prophesy-War/Python/client/
 import json
 import sys, os
-import components.logger as logger
+if os.path.basename(os.getcwd()) == 'client':
+    os.chdir('components/')
+from . import logger
 
-if os.path.basename(os.getcwd()) == 'components':
-    os.chdir('client')
+
+os.chdir('../')
 LOGGER = logger.get_public_logger('JSON_Editor')
 SETTING_FILE = 'settings.json'
 SETTING_LIST_FILE = 'settings_list.json'
