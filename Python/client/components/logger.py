@@ -1,5 +1,5 @@
 import logging
-import sys
+import sys, os
 from time import strftime
 from shutil import move
 
@@ -36,7 +36,7 @@ def get_public_logger(name='client', loglevel=default_strlevel):
 
 def logged_class(cls):
     class_name = cls.__name__
-    logger = logging.getLogger('P2P.'+class_name)
+    logger = logging.getLogger('PW.'+class_name)
     logger.setLevel(logging.DEBUG)
     logger.addHandler(default_fh)
     logger.propagate = False
@@ -47,10 +47,9 @@ def logged_class(cls):
 
 def move_log():
     try:
-        move('prophesy_war_client.log', strftime('Logs/log_%y-%m-%d_%H-%M-%S.log'))
+        move('components/prophesy_war_client.log', strftime('Logs/log_%y-%m-%d_%H-%M-%S.log'))
     except OSError as e:
-        # As when multiple launchers were opened at the same time
-        if e.winerror == 32:
+        if e.winerror == 32:  # As when multiple games were opened at the same time
             public_logger.warning("Another program is using log file. Now exiting.")
         else:
             public_logger.error("Unexpected error when moving log file: {}".format(e))
@@ -64,4 +63,4 @@ def exit():
     sys.exit()
 
 
-public_logger = get_public_logger('global')
+public_logger = get_public_logger('logger')

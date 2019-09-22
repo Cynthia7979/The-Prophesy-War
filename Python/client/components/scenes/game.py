@@ -1,7 +1,6 @@
 # -*-coding: gb2312 -*-
 import pygame
 import sys, os
-import textwrap
 from ..global_variable import *
 from ..hand import *
 from ..card import *
@@ -12,8 +11,9 @@ from pygame.locals import *
 
 SCENE_LOGGER = logger.get_public_logger('game')
 BOARD_WIDTH, BOARD_HEIGHT = HEIGHT*2, HEIGHT*2
-SIDEBAR_WIDTH = WIDTH/4
-SIDEBAR_HEIGHT = HEIGHT*1.1
+SIDEBAR_WIDTH, SIDEBAR_HEIGHT = (WIDTH/4, HEIGHT*1.1)
+SIDEBAR_RECT = pygame.Rect(0,0,SIDEBAR_WIDTH, SIDEBAR_HEIGHT)
+SIDEBAR_RECT.midright = (WIDTH, HEIGHT / 2)
 
 SIDEBAR_IMAGE = image('resources/fake_sidebar.png', resize=(SIDEBAR_WIDTH, SIDEBAR_HEIGHT))
 SIDEBAR_HIDE_IMAGE = image('resources/fake_sidebar_hide.png', resize=(WIDTH / 50, HEIGHT / 4))
@@ -36,7 +36,7 @@ def main():
     dummy_background = image('resources/background.png', resize=(CARD_WIDTH, CARD_HEIGHT))
     dummy_card = ItemCard('', '', 1, 10, '', '', '', dummy_background)
     dummy_hand = Hand((dummy_card,)*10)
-    dummy_mission = Mission('$8B0000$Dr. Bright`遗失了他的`$999999$682专用报纸筒', 1)
+    dummy_mission = Mission('$999999$黑夜是否嚎叫？`$EEEEEE$仅在月亏之时', 1)
 
     bg_surf = image('resources/fake_background.png', resize=(WIDTH, HEIGHT))
     bg_rect = bg_surf.get_rect()
@@ -128,7 +128,7 @@ def play_card(card: Card):
     screen.blit(black_mask, (0, 0))
     y = HEIGHT / 2
     x = 0
-    SCENE_LOGGER.debug(f'Start playing card {card.get_name()}')
+    SCENE_LOGGER.debug(f'Start playing card {card.name}')
     for i in range(1, FPS+5):
         DISPLAY.blit(screen, (0, 0))
         t = i*3 - 50
@@ -157,15 +157,13 @@ def show_sidebar(sidebar, missions, mission_page, chat_history):
     :return: None
     """
     if sidebar:
-        sidebar_rect = SIDEBAR_IMAGE.get_rect()
-        sidebar_rect.midright = (WIDTH, HEIGHT/2)
-        DISPLAY.blit(SIDEBAR_IMAGE, sidebar_rect)
+        DISPLAY.blit(SIDEBAR_IMAGE, SIDEBAR_RECT)
 
         # Missions
-        SIDEBAR_LEFT = (WIDTH-SIDEBAR_WIDTH)*1.05
+        sidebar_left = (WIDTH-SIDEBAR_WIDTH)*1.05
         mission_title_surf = font(SMALL).render('任务', True, BLACK)
         mission_title_rect = mission_title_surf.get_rect()
-        mission_title_rect.topleft = (SIDEBAR_LEFT, 10)
+        mission_title_rect.topleft = (sidebar_left, 10)
         DISPLAY.blit(mission_title_surf, mission_title_rect)
         mission_slice = missions[mission_page:mission_page+4]
         current_y = mission_title_rect.bottom*1.3
@@ -189,7 +187,7 @@ def show_sidebar(sidebar, missions, mission_page, chat_history):
                         # Display what we have now
                         text_surf = styled_text(''.join(current_styled_text), TINY)
                         text_rect = text_surf.get_rect()
-                        text_rect.topleft = (SIDEBAR_LEFT, current_y)
+                        text_rect.topleft = (sidebar_left, current_y)
                         DISPLAY.blit(text_surf, text_rect)
                         # Start a new line
                         current_y = text_rect.bottom + 5
@@ -200,7 +198,7 @@ def show_sidebar(sidebar, missions, mission_page, chat_history):
             if current_styled_text:
                 text_surf = styled_text(''.join(current_styled_text), TINY)
                 text_rect = text_surf.get_rect()
-                text_rect.topleft = (SIDEBAR_LEFT, current_y)
+                text_rect.topleft = (sidebar_left, current_y)
                 DISPLAY.blit(text_surf, text_rect)
                 current_y = text_rect.bottom + 5
             current_y += 5
@@ -218,7 +216,7 @@ def show_sidebar(sidebar, missions, mission_page, chat_history):
         DISPLAY.blit(SIDEBAR_HIDE_IMAGE, sidebar_rect)
 
 
-def is_drag_board(pos, board_center_pos, board_surf):  # TODO: 添加侧边栏检测，如点到侧边栏就判定为False
+def is_drag_board(pos, board_center_pos, board_surf, sidebar):
     """
     Is the current pos of mouse on gameboard
     :param pos: Pos of mouse
@@ -226,6 +224,8 @@ def is_drag_board(pos, board_center_pos, board_surf):  # TODO: 添加侧边栏检测，�
     :param board_surf: Surface of gameboard
     :return: Bool.
     """
+    if sidebar and SIDEBAR_RECT.collidepoint(pos[0], pos[1]):
+        return False
     board_rect = board_surf.get_rect()
     board_rect.center = board_center_pos
     return board_rect.collidepoint(pos)
