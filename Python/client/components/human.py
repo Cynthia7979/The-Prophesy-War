@@ -6,16 +6,16 @@ class Human:
 
     """
     def __init__(self, name: str, luck: int):
-        name = name
-        _luck = luck  # 运气值
-        _spirit = []  # 上身灵体数组 class: Spirit
+        self.name = name
+        self._luck = luck  # 运气值
+        self._spirit = []  # 上身灵体数组 class: Spirit
 
 
 class NPC(Human):
     def __init__(self, name, luck):
         Human.__init__(self, name, luck)
-        _fate: int    # 运势值
-        mission = []  # 持有任务 class: Mission
+        self._fate: int    # 运势值
+        self.mission = []  # 持有任务 class: Mission
 
 
 class Player(Human):
@@ -28,10 +28,11 @@ class Player(Human):
     已接任务
 
     """
-    def __init__(self, name, luck):
-        Human.__init__(self, name, luck)
-        coin: int
-        prestige: int  # 声望
-        owned_npc: []  # class: NPC
-        hand: []       # class: Card
-        mission: []     # 任务
+    def __init__(self, name, id):
+        Human.__init__(self, name, luck=0)
+        self.coin: int
+        self.prestige: int  # 声望
+        self.owned_npc: []  # class: NPC
+        self.hand: []       # class: Card
+        self.mission: []     # 任务
+        self.id = id

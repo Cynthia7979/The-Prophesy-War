@@ -4,7 +4,7 @@ class WebEvent(object):
         self.content = content
 
     def __str__(self):
-        return f'{self.head}|{self.content}'
+        return bytes(f'{self.head}|{self.content}')
 
     def unfold(content: str):
         return WebEvent('none', content)
@@ -34,7 +34,44 @@ class Prophesy(WebEvent):
         return Prophesy(content.split())
 
 
-head_map = {'draw': DrawCardEvent, 'prop': Prophesy}
+class Error(WebEvent):
+    def __init__(self, message):
+        super().__init__('eror', message)
+        self.message = message
+
+    def unfold(content):
+        return Error(content)
+
+
+class RoomEvent(WebEvent):
+    def __init__(self, message):
+        super().__init__('room', message)
+        self.message = message
+
+    def unfold(content):
+        return RoomEvent(content)
+
+
+class CreateRoomEvent(WebEvent):
+    def __init__(self, room_name, max_players):
+        super().__init__('crte', f'{room_name}/{max_players}')
+        self.room_name = room_name
+        self.max_players = max_players
+
+    def unfold(content:str):
+        try:
+            content.index('/')
+        except ValueError:
+            raise ValueError(f'"{content}" is not an available CreateRoomEvent content')
+        room_name, max_players = content.split('/')
+        return CreateRoomEvent(room_name, max_players)
+
+
+class WebEventError(Exception):
+    pass
+
+
+head_map = {'draw': DrawCardEvent, 'prop': Prophesy, 'eror': Error, 'room': RoomEvent, 'crte':CreateRoomEvent}
 
 
 def unfold(e: WebEvent):
@@ -44,8 +81,18 @@ def unfold(e: WebEvent):
     except ValueError:
         raise ValueError(f'"{s}" is not a valid WebEvent')
     head, content = s.split('|')
-    return head_map[head].unfold(content)
+    try:
+        unfold_class = head_map[head]
+    except KeyError:
+        unfold_class = WebEvent
+    return unfold_class.unfold(content)
 
+
+CONN_ACCEPTED = WebEvent('none', 'Connection accepted')
+
+FULL_ERROR = Error('Room is Full')
+
+JOIN_ACCEPTED = RoomEvent('Join room request accepted')
 
 if __name__ == '__main__':
     e = Prophesy(('one', 'two', 'three'))
