@@ -2,8 +2,8 @@ import pygame
 import sys, os
 from math import ceil
 import re
-if os.path.basename(os.getcwd()) == 'client':
-    os.chdir('components/')
+#if os.path.basename(os.getcwd()) == 'client':
+    #os.chdir('components/')
 from . import logger
 from .json_editor import get_settings
 
@@ -160,6 +160,3 @@ def global_quit():
     pygame.quit()
     logger.exit()
     sys.exit()
-
-
-print(strip_styled_text('$FF0000$red`black'))

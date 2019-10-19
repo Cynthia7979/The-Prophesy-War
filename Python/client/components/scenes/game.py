@@ -19,7 +19,7 @@ SIDEBAR_IMAGE = image('resources/fake_sidebar.png', resize=(SIDEBAR_WIDTH, SIDEB
 SIDEBAR_HIDE_IMAGE = image('resources/fake_sidebar_hide.png', resize=(WIDTH / 50, HEIGHT / 4))
 
 
-def main():
+def main(room):
     """
     Shows and plays the game.
     Client won't process any calculation. Only the host processes the game.

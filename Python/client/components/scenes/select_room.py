@@ -42,11 +42,11 @@ def main():
     rooms = []
     for i in range(7):  # 下面这一段6行等真有list以后替换掉
         roomname = "房间" + str(i+1)
-        current_player = 0
+        current_player = ()
         maxplayer = i
         playing = False
 
-        rooms.append(Room(roomname, i, current_player, maxplayer, playing))
+        rooms.append(Room(roomname, i, maxplayer, current_player, playing))
 
     for i in range(len(rooms)):
         current_room = rooms[i]
@@ -72,16 +72,25 @@ def main():
                 terminate()
             elif event.type == MOUSEBUTTONUP:
                 if l_arrow_rect.collidepoint(event.pos):
-                    SCENE_LOGGER.debug('Arrow left')
+                    SCENE_LOGGER.info('Arrow left')
                 elif r_arrow_rect.collidepoint(event.pos):
-                    SCENE_LOGGER.debug('Arrow right')
+                    SCENE_LOGGER.info('Arrow right')
+                elif create_rect.collidepoint(event.pos):
+                    SCENE_LOGGER.info('Create room')
                 elif not ball_rect.collidepoint(event.pos):
                     SCENE_LOGGER.info('Background clicked, returning to main menu')
                     return None
                 for i in range(len(rooms)):
                     if rooms[i].rect.collidepoint(event.pos):
-                        SCENE_LOGGER.debug(f'Room chosen: {rooms[i].room_id}')
-                        return rooms[i].room_name
+                        chosen_room = rooms[i]
+                        SCENE_LOGGER.debug(f'Room chosen: {chosen_room.room_id}')
+                        if chosen_room.max_players == len(chosen_room.current_players):
+                            pass  # TODO
+                        elif chosen_room.max_players < len(chosen_room.current_players):
+                            raise ValueError('Max player cannot be less then current players')
+                        else:
+                            return chosen_room.room_id
+
         pygame.display.flip()
         CLOCK.tick(FPS)
 

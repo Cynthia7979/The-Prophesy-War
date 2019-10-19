@@ -3,3 +3,5 @@
 *.log
 __pycache__/
 .idea/
+test.*
+Python/client/components/host_server.py
