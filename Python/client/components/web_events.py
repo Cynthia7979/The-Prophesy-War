@@ -91,6 +91,8 @@ def unfold(e):
     except ValueError:
         raise ValueError(f'"{s}" is not a valid WebEvent')
     head, content = s.split('|')
+    head = head.strip("b'")
+    content = content[:-1]
     try:
         unfold_class = head_map[head]
     except KeyError:

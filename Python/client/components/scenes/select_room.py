@@ -45,8 +45,8 @@ def main():
         current_player = ()
         maxplayer = i
         playing = False
-
-        rooms.append(Room(roomname, i, maxplayer, current_player, playing))
+        #                                                                        address
+        rooms.append(Room(roomname, i, maxplayer, current_player, playing, ('127.0.0.1', 50000)))
 
     for i in range(len(rooms)):
         current_room = rooms[i]

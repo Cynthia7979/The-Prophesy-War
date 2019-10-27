@@ -1,5 +1,4 @@
 import pygame
-from .global_variable import *
 
 
 class Room(object):
@@ -12,8 +11,7 @@ class Room(object):
         playing (bool): Playing or waiting.
     """
 
-    def __init__(self, room_name: str, room_id: int, max_players: int, address:tuple,
-                 current_players=(), playing=False):
+    def __init__(self, room_name: str, room_id: int, max_players: int, current_players=(), playing=False):
         """
         Initializes a Room object.
         :param room_name: Room name.
@@ -27,7 +25,6 @@ class Room(object):
         self.current_players = list(current_players)
         self.max_players     = max_players
         self.playing        = playing
-        self.address = address
         self.surf = self.get_state_surf()
         self.rect = self.surf.get_rect()
 
@@ -72,13 +69,13 @@ class Room(object):
             raise TypeError('Room instance cannot be compared with non-Room instances.')
 
     def __eq__(self, other):
-        if not (self > other or self < other):
+        if not (self>other or self<other):
             return True
         else:
             return False
 
     def __ge__(self, other):
-        if self > other or self == other:
+        if self>other or self==other:
             return True
         else:
             return False

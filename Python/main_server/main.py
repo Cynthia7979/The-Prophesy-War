@@ -9,10 +9,12 @@ import threading
 import socket
 import web_events
 from web_events import unfold
-import logger
+from components import logger, room
 
 HOST = '127.0.0.1'
 PORT = 50000
+
+PUBLIC_LOGGER = logger.get_public_logger()  # name='server'
 
 
 class LoopingThread(threading.Thread):
@@ -43,7 +45,8 @@ class Thread(threading.Thread):
 
 def main():
     global threads, rooms
-    rooms = {}  # {(host, port): Room instance}
+    PUBLIC_LOGGER.info('Launching server...')
+    rooms = {}  # {id: Room instance}
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind((HOST, PORT))
     threads = {'LISTEN': LoopingThread(target=listen, args=(sock,), name='LISTEN')}
@@ -51,7 +54,7 @@ def main():
 
 
 def listen(sock: socket.socket):
-    print('Another loop of listening!')
+    PUBLIC_LOGGER.debug('Another loop of listening!')
     sock.listen()  # Parameter backlog is optional
     conn, addr = sock.accept()
     threads[(conn, addr)] = Thread(target=handle, args=(conn, addr))
@@ -59,10 +62,16 @@ def listen(sock: socket.socket):
 
 
 def handle(conn:socket.socket, addr:tuple):
-    print('Handling connection from ', addr)
+    PUBLIC_LOGGER.info(f'Handling connection from {addr}')
     request = conn.recv(1024)
     event = unfold(request)
-    print(event.__class__)
+    if event.__class__ == web_events.JoinRoomEvent:
+        try:
+            room = rooms[event.room_id]
+        except KeyError:
+            web_events.send_event(web_events.Error(f'Cannot find room #{event.room_id}'))
+            return
+        web_events.send_event(web_events.RoomEvent(f'{room.address}'))
 
 
 if __name__ == '__main__':

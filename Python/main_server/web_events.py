@@ -91,11 +91,17 @@ def unfold(e):
     except ValueError:
         raise ValueError(f'"{s}" is not a valid WebEvent')
     head, content = s.split('|')
+    head = head.strip("b'")
+    content = content[:-1]
     try:
         unfold_class = head_map[head]
     except KeyError:
         unfold_class = WebEvent
     return unfold_class.unfold(content)
+
+
+def send_event(conn, event):
+    return conn.sendall(bytes(str(event), encoding='utf-8'))
 
 
 CONN_ACCEPTED = WebEvent('none', 'Connection accepted')
@@ -105,8 +111,8 @@ FULL_ERROR = Error('Room is Full')
 JOIN_ACCEPTED = RoomEvent('Join room request accepted')
 
 if __name__ == '__main__':
-    e = Prophesy(('one', 'two', 'three'))
-    print(e)
-    u = unfold(e)
-    print(u)
-    print(u.__dict__)
+    e = JoinRoomEvent(1)
+    r = bytes(str(e), encoding='utf-8')
+    print(r)
+    print('unfold:',unfold(r))
+    print(unfold(r).__class__)
