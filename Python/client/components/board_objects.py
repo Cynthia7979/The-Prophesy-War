@@ -1,3 +1,6 @@
+"""
+Defines anything that could be put onto the gameboard.
+"""
 import sys, os
 
 
@@ -8,7 +11,7 @@ class Container(object):
         :param name: Name of the object
         :param container: Default container of the object
         """
-        self.container = container
+        self.container = list(container)
 
 
 class BoardPlacement(Container):

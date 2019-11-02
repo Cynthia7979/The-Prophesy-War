@@ -1,16 +1,22 @@
+"""
+Json file editor. Handler for json library.
+
+**NOTE:** `data` is globalized in `main()`!
+"""
 # Working directory: The-Prophesy-War/Python/client/
 import json
 import sys, os
 if os.path.basename(os.getcwd()) == 'client':
     os.chdir('components/')
-from . import logger
+from . import logger  # I will try to change this... if possible
 
 
-os.chdir('../')
-LOGGER = logger.get_public_logger('JSON_Editor')
-SETTING_FILE = 'settings.json'
-SETTING_LIST_FILE = 'settings_list.json'
-DEFAULT = {'settings': {'resolution': (1080, 720), 'language': 'zh'}}
+os.chdir('../')  # To Python/client (the Universe and Beyond!x)
+LOGGER = logger.get_public_logger('JSON_Editor')  # Logger for the file
+SETTING_FILE = 'settings.json'  # User preference
+SETTING_LIST_FILE = 'settings_list.json'  # Settings window display levels
+DEFAULT = {'settings': {'resolution': (1080, 720), 'language': 'zh'}}  # Default setting to use when no preference file
+#                                                                        is found. TODO I should make this a file
 
 
 def update_settings(s):
