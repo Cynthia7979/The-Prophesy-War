@@ -96,7 +96,7 @@ def main():
 
 
 def terminate():
-    logger.exit()
+    logger.quit()
     sys.exit()
 
 

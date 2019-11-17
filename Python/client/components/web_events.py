@@ -1,3 +1,15 @@
+"""
+Stylized classes to send in socket connections.
+
+**Usage:**
+Each class's `head` is used to specify which kind of WebEvent it is. Content is the data you want to transfer.
+Also, each class include a different way to unfold (aka. unpack) the string received from socket connections.
+If the string style doesn't meet with its head, a `ValueError` will be thrown.
+
+**Note:** Currently, this file should be identical to main_server/web_events.py
+"""
+
+
 class WebEvent(object):
     def __init__(self, head, content):
         self.head = head
@@ -81,7 +93,7 @@ class WebEventError(Exception):
 
 
 head_map = {'draw': DrawCardEvent, 'prop': Prophesy, 'eror': Error, 'room': RoomEvent, 'crte':CreateRoomEvent,
-            'join': JoinRoomEvent}
+            'join': JoinRoomEvent}  # Link the head to specific `unfold` method.
 
 
 def unfold(e):
@@ -91,8 +103,8 @@ def unfold(e):
     except ValueError:
         raise ValueError(f'"{s}" is not a valid WebEvent')
     head, content = s.split('|')
-    head = head.strip("b'")
-    content = content[:-1]
+    head = head.strip("b'")  # Socket connections use `bytes` type, like this: `b'bytes words'`
+    content = content[:-1]   # We need to manually remove `b'` at the beginning and `'` in the end
     try:
         unfold_class = head_map[head]
     except KeyError:
@@ -100,6 +112,7 @@ def unfold(e):
     return unfold_class.unfold(content)
 
 
+# Some pre-defined WebEvents to use
 CONN_ACCEPTED = WebEvent('none', 'Connection accepted')
 
 FULL_ERROR = Error('Room is Full')

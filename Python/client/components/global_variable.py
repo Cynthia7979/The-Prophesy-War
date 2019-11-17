@@ -191,5 +191,5 @@ def global_quit():
     """
     pygame.font.quit()
     pygame.quit()
-    logger.exit()
+    logger.quit()
     sys.exit()

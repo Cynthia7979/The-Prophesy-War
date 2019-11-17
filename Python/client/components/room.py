@@ -3,42 +3,33 @@ from .global_variable import *
 
 
 class Room(object):
-
-    """
-    Attributes:
-        room_name (str): The name of the room.
-        current_players (int): Current number of players.
-        max_players (int): Max player.
-        playing (bool): Playing or waiting.
-    """
-
-    def __init__(self, room_name: str, room_id: int, max_players: int, address:tuple,
+    def __init__(self, room_name: str, room_id: int, max_players: int, address: tuple,
                  current_players=(), playing=False):
         """
         Initializes a Room object.
         :param room_name: Room name.
         :param current_players: List of names of the players in the room.
         :param max_players: Max # of players.
+        :param address: Address of the host client, tuple of (host, port).
+        :param current_players: Any preexisting players when creating the Room instance.
         :param playing: Is the room in game or waiting to start.
         """
 
-        self.room_name      = room_name
-        self.room_id        = room_id
+        self.room_name       = room_name
+        self.room_id         = room_id
         self.current_players = list(current_players)
         self.max_players     = max_players
-        self.playing        = playing
+        self.playing         = playing
         self.address = address
-        self.surf = self.get_state_surf()
+        self.surf = self.get_state_surf()  # Check client/components/scenes/select_room.py  TODO better implementation
         self.rect = self.surf.get_rect()
 
     def set_state(self, room_name: str = None, max_players: int = None, current_players: tuple = None,
                   playing: bool = None):
         """
         Set (updates) the state of a room.
-        :param room_name: Room name.
-        :param current_players: Current # of player (s)
-        :param max_players: Max # of players.
-        :param playing: Is the room in game or waiting to start.
+
+        *Parameters*: Check __init__()
         """
         if room_name: self.room_name = room_name
         if current_players: self.current_players = current_players

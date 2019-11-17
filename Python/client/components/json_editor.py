@@ -14,19 +14,19 @@ from . import logger  # I will try to change this... if possible
 os.chdir('../')  # To Python/client (the Universe and Beyond!x)
 LOGGER = logger.get_public_logger('JSON_Editor')  # Logger for the file
 SETTING_FILE = 'settings.json'  # User preference
-SETTING_LIST_FILE = 'settings_list.json'  # Settings window display levels
+SETTING_LIST_FILE = 'settings_list.json'  # How the in-game preference window is displayed
 DEFAULT = {'settings': {'resolution': (1080, 720), 'language': 'zh'}}  # Default setting to use when no preference file
 #                                                                        is found. TODO I should make this a file
 
 
-def update_settings(s):
+def update_settings(s: dict):
     """
     Update settings.json.
-    :param s: Complete settings dict to save.
+    :param s: Complete settings dict to save. e.g. Something that resembles DEFAULT
     """
     data['settings'] = s
     with open(SETTING_FILE, 'w') as f:
-        json.dump(s, f)
+        json.dump(s, f)  # Dump s into f
     LOGGER.info('settings.json was updated to {}.'.format(s))
 
 
@@ -40,20 +40,20 @@ def get_settings(key=None, keys=None):
              Dict of specified entries if :param keys: given.
     """
     result = {}
-    if keys:
-        for k in keys:
+    if keys:  # If multiple entries are specified,
+        for k in keys:  # For each entry,
             try:
-                result[k] = data['settings'][k]
-            except KeyError:
-                result[k] = DEFAULT['settings'][k]
+                result[k] = data['settings'][k]  # Get the value of that entry.
+            except KeyError:  # If this entry isn't set,
+                result[k] = DEFAULT['settings'][k]  # Return the default value.
         return result
-    elif key:
-        try:
+    elif key:  # If only one entry is specified,
+        try:  # Same process.
             return data['settings'][key]
         except KeyError:
             return DEFAULT['settings'][key]
     else:
-        return data['settings']
+        return data['settings']  # Return all data when no entry is specified.
 
 
 def get_settings_list():
@@ -63,15 +63,15 @@ def get_settings_list():
 
 def main():
     global data
-    data = {}
+    data = {}  # Current setting data
     try:
         with open(SETTING_FILE) as f:
             data['settings'] = json.load(f)
     except json.decoder.JSONDecodeError:
-        LOGGER.warning('No data in settings.json')
+        LOGGER.warning('No data in settings.json')  # Usually when the game is open for the first time.
         data = DEFAULT
         with open(SETTING_FILE, 'w') as f:
-            json.dump(data['settings'], f)
+            json.dump(data['settings'], f)  # Write default data
 
 
 def close():

@@ -8,12 +8,14 @@ Intervals between scenes.
 SCENE_LOGGER = get_public_logger('interval')
 CRYSTAL_BALL = 'resources/fake_crystal_ball.png'
 BACKGROUND = 'resources/fake_background.png'
-DURATION = FPS
+DURATION = FPS  # Finish an interval in 1 second.
 
 
 def zoom_ball(start=(HEIGHT / 2, HEIGHT / 1.78),
+              #        ↑width↓        ↑height↓
               end=(HEIGHT / 2 * 1.8, HEIGHT / 1.78 * 1.8),
               start_pos=(WIDTH / 2, HEIGHT * 0.65),
+              #         ↑middle↓  mid↓ upper-mid↑
               end_pos=(WIDTH / 2, HEIGHT / 2),
               duration=DURATION):
     SCENE_LOGGER.info('Scaling ball...')
@@ -29,8 +31,8 @@ def zoom_ball(start=(HEIGHT / 2, HEIGHT / 1.78),
     (current_w, current_h), (current_x, current_y) = start, start_pos
     for i in range(int(duration/2)):
         DISPLAY.blit(bg, bg_rect)
-        current_w += ceil((end[0] - start[0]) / duration)*2
-        current_h += ceil((end[1] - start[1]) / duration)*2
+        current_w += ceil((end[0] - start[0]) / duration)*2  # width
+        current_h += ceil((end[1] - start[1]) / duration)*2  # height
         current_x += ceil((end_pos[0] - start_pos[0]) / duration)*2
         current_y += ceil((end_pos[1] - start_pos[1]) / duration)*2
         scaled_ball = pygame.transform.scale(original_ball, (int(current_w), int(current_h)))
@@ -40,7 +42,7 @@ def zoom_ball(start=(HEIGHT / 2, HEIGHT / 1.78),
         pygame.display.flip()
         CLOCK.tick(FPS)
     DISPLAY.blit(bg, bg_rect)
-    scaled_ball = image(CRYSTAL_BALL, resize=end)
+    scaled_ball = image(CRYSTAL_BALL, resize=end)  # final picture
     scaled_rect = scaled_ball.get_rect()
     scaled_rect.center = end_pos
     DISPLAY.blit(scaled_ball, scaled_rect)
@@ -53,4 +55,4 @@ def shrink_ball(start=(HEIGHT / 2 * 1.8, HEIGHT / 1.78 * 1.8),
                 start_pos=(WIDTH / 2, HEIGHT / 2),
                 end_pos=(WIDTH / 2, HEIGHT * 0.65),
                 duration=DURATION/2):
-    return zoom_ball(start, end, start_pos, end_pos, duration)
+    return zoom_ball(start, end, start_pos, end_pos, duration)  # syntax candy, just reverse it.

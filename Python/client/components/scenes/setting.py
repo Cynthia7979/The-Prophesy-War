@@ -1,3 +1,11 @@
+"""
+The settings (aka preference) scene.
+
+**Structure:**
+
+column: Big page of a group of entries.
+
+"""
 # -*- coding: gb2312 -*-
 from .. import logger
 from .. import json_editor
@@ -10,7 +18,7 @@ SCENE_LOGGER = logger.get_public_logger('setting')
 def main():
     SCENE_LOGGER.info('On setting.')
     current_column = 0
-    while True:  # Game loop
+    while True:
         display_parts()
         sel_rectangles, col_rectangles = display_selections(current_column)
         for event in pygame.event.get():
