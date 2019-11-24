@@ -34,7 +34,7 @@ def main(room):
     real_width = WIDTH - (SIDEBAR_WIDTH * sidebar)
 
     dummy_background = image('resources/background.png', resize=(CARD_WIDTH, CARD_HEIGHT))
-    dummy_card = ItemCard('', '', 1, 10, '', '', '', dummy_background)
+    dummy_card = ItemCard('', 1, 10, '', '', '', dummy_background)
     dummy_hand = Hand((dummy_card,)*10)
     dummy_mission = Mission('$999999$黑夜是否嚎叫？`$EEEEEE$仅在月亏之时', 1)
 

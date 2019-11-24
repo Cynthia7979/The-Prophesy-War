@@ -24,7 +24,7 @@ def main():
             scenes.interval.zoom_ball()
             room = scenes.select_room.main()
             if room:  # Chose a room
-                scenes.lobby.main(room)  # Lobby (where people can talk and view each other)
+                #scenes.lobby.main(room)  # Lobby (where people can talk and view each other)
                 scenes.game.main(room)  # pass room
                 # scenes.game_over.main()  (isn't finished yet)
             else:  # Clicked the background
