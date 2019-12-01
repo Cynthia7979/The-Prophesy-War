@@ -11,7 +11,7 @@ import web_events
 from web_events import unfold
 from components import logger, room
 
-HOST = '127.0.0.1'
+HOST = 'localhost'
 PORT = 50000
 
 PUBLIC_LOGGER = logger.get_public_logger()  # name='server'
@@ -69,7 +69,7 @@ def handle(conn:socket.socket, addr:tuple):
         try:
             room = rooms[event.room_id]
         except KeyError:
-            web_events.send_event(web_events.Error(f'Cannot find room #{event.room_id}'))
+            web_events.send_event(conn, web_events.Error(f'Cannot find room #{event.room_id}'))
             return
         web_events.send_event(web_events.RoomEvent(f'{room.address}'))
 

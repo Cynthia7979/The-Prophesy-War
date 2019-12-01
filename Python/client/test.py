@@ -1,16 +1,3 @@
-# from components.scenes import lobby
-#
-# lobby.main(2)
+import components.scenes.lobby as lobby
 
-from components import logger
-
-
-@logger.logged_class
-class MyClass(object):
-    def __init__(self):
-        self.logger.debug('hello logger')
-        print('adios')
-
-
-mc = MyClass()
-
+lobby.main(room_id=2)

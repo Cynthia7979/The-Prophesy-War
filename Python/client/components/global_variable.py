@@ -15,7 +15,7 @@ pygame.font.init()
 
 # Socket
 PORT             = 50000
-SERVER           = '127.0.0.1'  # In this case, localhost
+SERVER           = 'localhost'  # In this case, localhost
 
 # Pygame
 FPS              = 30  # Be careful changing this because it is associated with some animation speed...
