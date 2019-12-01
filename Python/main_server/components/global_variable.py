@@ -1,5 +1,7 @@
 """
 Global variables (note that file name is "global_variable")
+
+Currently, this file is copied entirely from client.
 """
 import pygame
 import sys, os

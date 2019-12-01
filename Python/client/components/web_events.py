@@ -112,6 +112,10 @@ def unfold(e):
     return unfold_class.unfold(content)
 
 
+def send_event(conn, event):
+    return conn.sendall(bytes(str(event), encoding='utf-8'))
+
+
 # Some pre-defined WebEvents to use
 CONN_ACCEPTED = WebEvent('none', 'Connection accepted')
 

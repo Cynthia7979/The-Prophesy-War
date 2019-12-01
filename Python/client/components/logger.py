@@ -29,7 +29,6 @@ def get_public_logger(name='client', loglevel=default_strlevel):
     :param loglevel: Logging level in strings (so that people don't have to import logging first to use loggers).
     """
     logger = logging.getLogger(name)
-
     try:
         logger.setLevel(STRLEVEL[loglevel])
     except KeyError:
@@ -65,8 +64,10 @@ def move_log():
     """
     Move the log file to client/Log/ after program is closed
     """
+    default_fh.close()
+    default_ch.close()
     try:
-        move('components/prophesy_war_client.log', strftime('Logs/log_%y-%m-%d_%H-%M-%S.log'))
+        move('prophesy_war_client.log', strftime('Logs/log_%y-%m-%d_%H-%M-%S.log'))
     except OSError as e:
         if e.winerror == 32:  # As when multiple games were opened at the same time
             public_logger.warning("Another program is using log file. Now exiting.")
@@ -74,7 +75,7 @@ def move_log():
             public_logger.error("Unexpected error when moving log file: {}".format(e))
 
 
-def quit():
+def exit():
     public_logger.info('Ready to close.')
     default_fh.close()
     default_ch.close()

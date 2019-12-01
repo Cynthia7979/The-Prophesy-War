@@ -14,7 +14,7 @@ def main():
     Displays select room scene on components.global_variable.DISPLAY.
     """
     SCENE_LOGGER.info('On select room')
-    bg_image        = image('resources/fake_background.png', resize=WIN_SIZE)
+    bg_image        = image('resources/fake_background.png', resize=WIN_SIZE)  # Background image
     bg_rect         = bg_image.get_rect()
     bg_rect.topleft = (0, 0)
 
@@ -26,21 +26,21 @@ def main():
     ball_rect        = crystal_ball.get_rect()
     ball_rect.center = (WIDTH/2, HEIGHT/2)
 
-    l_arrow_image = image('resources/l_arrow.png')
+    l_arrow_image = image('resources/l_arrow.png')  # Left arrow
     l_arrow_rect = l_arrow_image.get_rect()
     l_arrow_rect.midtop = ((WIDTH/2)+l_arrow_rect.width*2, HEIGHT/12 * 8.9)
 
-    r_arrow_image = image('resources/r_arrow.png')
+    r_arrow_image = image('resources/r_arrow.png')  # Right arrow
     r_arrow_rect = r_arrow_image.get_rect()
     r_arrow_rect.midtop = ((WIDTH/2)-r_arrow_rect.width*2, HEIGHT/12 * 8.9)
 
     #                                        "1"
-    page_surface = font(SMALL).render(str(room_page), True, BLACK)
+    page_surface = font(SMALL).render(str(room_page), True, BLACK)  # Page number
     page_rect = page_surface.get_rect()
     page_rect.midtop = (WIDTH/2,(HEIGHT / 12 * 9.125))
 
     rooms = []
-    for i in range(7):  # 下面这一段6行等真有list以后替换掉
+    for i in range(7):  # TODO 下面这一段6行等真有list以后替换掉
         roomname = "房间" + str(i+1)
         current_player = ()
         maxplayer = i
@@ -60,7 +60,7 @@ def main():
         DISPLAY.blit(bg_image, bg_rect)
         DISPLAY.blit(crystal_ball, ball_rect)
         DISPLAY.blit(create, create_rect)
-        for i in range(len(rooms)):  # FIXME: Should be only 7
+        for i in range(len(rooms)):  # FIXME: Should be 7, not all of the rooms
             DISPLAY.blit(rooms[i].surf, rooms[i].rect)
         DISPLAY.blit(l_arrow_image, l_arrow_rect)
         DISPLAY.blit(r_arrow_image, r_arrow_rect)
@@ -72,31 +72,31 @@ def main():
                 terminate()
             elif event.type == MOUSEBUTTONUP:
                 if l_arrow_rect.collidepoint(event.pos):
-                    SCENE_LOGGER.info('Arrow left')
+                    SCENE_LOGGER.info('Arrow left')  # TODO
                 elif r_arrow_rect.collidepoint(event.pos):
-                    SCENE_LOGGER.info('Arrow right')
+                    SCENE_LOGGER.info('Arrow right')  # TODO
                 elif create_rect.collidepoint(event.pos):
-                    SCENE_LOGGER.info('Create room')
+                    SCENE_LOGGER.info('Create room')  # TODO
                 elif not ball_rect.collidepoint(event.pos):
                     SCENE_LOGGER.info('Background clicked, returning to main menu')
                     return None
                 for i in range(len(rooms)):
-                    if rooms[i].rect.collidepoint(event.pos):
+                    if rooms[i].rect.collidepoint(event.pos):  # Check one by one
                         chosen_room = rooms[i]
                         SCENE_LOGGER.debug(f'Room chosen: {chosen_room.room_id}')
-                        if chosen_room.max_players == len(chosen_room.current_players):
+                        if chosen_room.max_players == len(chosen_room.current_players):  # If the room is full
                             pass  # TODO
                         elif chosen_room.max_players < len(chosen_room.current_players):
                             raise ValueError('Max player cannot be less then current players')
-                        else:
+                        else:  # If the room is not full
                             return chosen_room.room_id
-
+                        # TODO: Add another circumstance when the room is in the middle of a game
         pygame.display.flip()
         CLOCK.tick(FPS)
 
 
 def terminate():
-    logger.quit()
+    logger.exit()
     sys.exit()
 
 
