@@ -6,7 +6,9 @@ from ..hand import *
 from ..card import *
 from ..mission import Mission
 from .. import logger
+from pygame import Surface
 from pygame.locals import *
+
 
 
 SCENE_LOGGER = logger.get_public_logger('game')
@@ -38,6 +40,9 @@ def main(room):
     dummy_hand = Hand((dummy_card,)*10)
     dummy_mission = Mission('$999999$黑夜是否嚎叫？`$EEEEEE$仅在月亏之时', 1)
 
+    dummy_prophesy_button = font(SMALL).render("进行占卜", True, BLACK) #占卜 button试做
+    dummy_prophesy_button_rect = dummy_prophesy_button.get_rect()
+
     bg_surf = image('resources/fake_background.png', resize=(WIDTH, HEIGHT))  # Game background
     bg_rect = bg_surf.get_rect()
     bg_rect.topleft = (0, 0)
@@ -45,9 +50,12 @@ def main(room):
     while True:
         mouse_pos = pygame.mouse.get_pos()
         DISPLAY.blit(bg_surf, bg_rect)
-        show_gameboard(board_surf, board_center_pos, board_scale)
-        show_hand(dummy_hand, real_width)
-        show_sidebar(sidebar, [dummy_mission]*10, 0, [])
+
+        show_gameboard(board_surf, board_center_pos, board_scale)  # show gameboard on screen
+        show_hand(dummy_hand, real_width)  # show hand cards on screen
+        show_sidebar(sidebar, [dummy_mission]*10, 0, [])  # show sidebar on screen
+        show_prophesy_button(dummy_prophesy_button,dummy_prophesy_button_rect)
+
         if dragging_board:
             board_center_pos = get_new_board_center_pos(mouse_pos, mouse_pos_cache, board_center_pos)
             mouse_pos_cache = mouse_pos
@@ -62,16 +70,21 @@ def main(room):
                 # elif clicked_on_another_thing:
                 #    do something
                 # else:
-                    dragging_board = True
-                    mouse_pos_cache = event.pos
+                dragging_board = True
+                mouse_pos_cache = event.pos
+                if dummy_prophesy_button_rect.collidepoint(mouse_pos_cache):
+                    DISPLAY.blit(dummy_prophesy_button, (0,0))
+                    SCENE_LOGGER.info(f'START PROPHESY')
+                    # show_prophesy_selection( )
+
             elif event.type == MOUSEBUTTONUP:
                 if event.button == 4:  # Mouse wheel rolled up
-                    if board_scale+0.1 > 2.9:  # If it is big enough. 2.9 (not 3) to prevent float type bugs
+                    if board_scale + 0.1 > 2.9:  # If it is big enough. 2.9 (not 3) to prevent float type bugs
                         board_scale = 2.9
                     else:
                         board_scale += 0.1
                 elif event.button == 5:  # Mouse wheel rolled down
-                    if board_scale-0.1 <= 0:
+                    if board_scale - 0.1 <= 0:
                         board_scale = 0.1
                     else:
                         board_scale -= 0.1
@@ -82,6 +95,8 @@ def main(room):
                     dragging_board = False
                 else:
                     pass  # TODO: Other things
+                # elif event.type ==
+
         pygame.display.flip()
         CLOCK.tick(FPS)
 
@@ -257,6 +272,23 @@ def get_new_board_center_pos(new_pos, old_pos, board_center_pos):
     # Equivalent to (new_pos[0]-old_pos[0], new_pos[1]-old_pos[1])
     pos_alter = tuple([new_pos[x]-old_pos[x] for x in (0,1)])
     return tuple([board_center_pos[x] + pos_alter[x] for x in (0,1)])
+
+
+def show_prophesy_button(b: Surface, r: Rect): # place prophesy button a little above hands
+    DISPLAY.blit(b, r)
+
+
+def show_prophesy_selection(b: Surface, r: Rect):  #
+
+    # dummy_prophesy_button = font(SMALL).render("进行占卜", True, BLACK) #占卜 button试做
+    # dummy_prophesy_button_rect = dummy_prophesy_button.get_rect()
+
+    # send a message to server: I want do a prophesy
+    # server send back result
+    # show result on screen and adjust data
+    a = 0
+
+    # DISPLAY.blit(b,r)
 
 
 def terminate():
