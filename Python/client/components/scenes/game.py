@@ -72,6 +72,8 @@ def main(room):
                 # else:
                 dragging_board = True
                 mouse_pos_cache = event.pos
+
+                # “进行占卜按键”事件
                 if dummy_prophesy_button_rect.collidepoint(mouse_pos_cache):
                     DISPLAY.blit(dummy_prophesy_button, (0,0))
                     SCENE_LOGGER.info(f'START PROPHESY')
