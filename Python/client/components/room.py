@@ -4,11 +4,11 @@ from .global_variable import *
 
 class Room(object):
     def __init__(self, room_name: str, room_id: int, max_players: int, address: tuple,
-                 current_players=(), playing=False):
+                 current_players={}, playing=False):
         """
         Initializes a Room object.
         :param room_name: Room name.
-        :param current_players: List of names of the players in the room.
+        :param current_players: Dict of {address: playername}
         :param max_players: Max # of players.
         :param address: Address of the host client, tuple of (host, port).
         :param current_players: Any preexisting players when creating the Room instance.
@@ -17,7 +17,7 @@ class Room(object):
 
         self.room_name       = room_name
         self.room_id         = room_id
-        self.current_players = list(current_players)
+        self.current_players = current_players
         self.max_players     = max_players
         self.playing         = playing
         self.address = address
@@ -79,3 +79,16 @@ class Room(object):
             return True
         else:
             return False
+
+    def __repr__(self):
+        return str((self.room_name, self.room_id, self.max_players, self.address, self.current_players, self.playing))
+
+
+def unfold(r):
+    if type(r) == str:
+        r = eval(r)
+    if type(r) != tuple:
+        raise TypeError('Room unfold function received non-tuple-like string.')
+
+    rname, rid, mplayer, addr, currplayer, playing = r
+    return Room(rname, rid, mplayer, addr, currplayer, playing)

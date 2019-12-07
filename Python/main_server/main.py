@@ -68,10 +68,10 @@ def handle(conn:socket.socket, addr:tuple):
     if event.__class__ == web_events.JoinRoomEvent:
         try:
             room = rooms[event.room_id]
+            web_events.send_event(conn, web_events.RoomEvent(f'{room.address}'))
         except KeyError:
             web_events.send_event(conn, web_events.Error(f'Cannot find room #{event.room_id}'))
             return
-        web_events.send_event(web_events.RoomEvent(f'{room.address}'))
 
 
 if __name__ == '__main__':
