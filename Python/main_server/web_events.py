@@ -113,7 +113,9 @@ def unfold(e):
 
 
 def send_event(conn, event):
-    return conn.sendall(bytes(str(event), encoding='utf-8'))
+    s = str(event)
+    b = bytes(s, encoding='utf-8')  # did some debug thing
+    return conn.sendall(b)
 
 
 # Some pre-defined WebEvents to use

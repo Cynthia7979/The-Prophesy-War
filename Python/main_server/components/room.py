@@ -1,7 +1,6 @@
 import pygame
 
 
-
 class Room(object):
 
     """
@@ -26,8 +25,9 @@ class Room(object):
         self.current_players = list(current_players)
         self.max_players     = max_players
         self.playing        = playing
-        self.surf = self.get_state_surf()
-        self.rect = self.surf.get_rect()
+
+        # self.surf = self.get_state_surf()
+        # self.rect = self.surf.get_rect()
 
     def set_state(self, room_name: str = None, max_players: int = None, current_players: tuple = None,
                   playing: bool = None):
@@ -59,6 +59,9 @@ class Room(object):
 
     def add_player(self, new_player: str):
         self.current_players.append(new_player)
+
+    def set_address(self, a: tuple):
+        self.address = a
 
     def __gt__(self, other):
         if isinstance(other, Room):

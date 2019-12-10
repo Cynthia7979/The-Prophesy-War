@@ -1,9 +1,11 @@
 # -*-coding: gb2312 -*-
 import pygame
 import sys, os
+import time
 from ..global_variable import *
 from ..hand import *
 from ..card import *
+from ..web_events import *
 from ..mission import Mission
 from .. import logger
 from pygame import Surface
@@ -42,6 +44,7 @@ def main(room):
 
     dummy_prophesy_button = font(SMALL).render("进行占卜", True, BLACK) #占卜 button试做
     dummy_prophesy_button_rect = dummy_prophesy_button.get_rect()
+    dummy_prophesy_button_rect.topright = (WIDTH/9, HEIGHT/2)
 
     bg_surf = image('resources/fake_background.png', resize=(WIDTH, HEIGHT))  # Game background
     bg_rect = bg_surf.get_rect()
@@ -54,7 +57,7 @@ def main(room):
         show_gameboard(board_surf, board_center_pos, board_scale)  # show gameboard on screen
         show_hand(dummy_hand, real_width)  # show hand cards on screen
         show_sidebar(sidebar, [dummy_mission]*10, 0, [])  # show sidebar on screen
-        show_prophesy_button(dummy_prophesy_button,dummy_prophesy_button_rect)
+        show_prophesy_button(dummy_prophesy_button, dummy_prophesy_button_rect)
 
         if dragging_board:
             board_center_pos = get_new_board_center_pos(mouse_pos, mouse_pos_cache, board_center_pos)
@@ -75,10 +78,12 @@ def main(room):
 
                 # “进行占卜按键”事件
                 if dummy_prophesy_button_rect.collidepoint(mouse_pos_cache):
-                    DISPLAY.blit(dummy_prophesy_button, (0,0))
+                    #DISPLAY.blit(dummy_prophesy_button, (0, 0))
+                    #DISPLAY.blit(bg_surf,dummy_prophesy_button_rect)
                     SCENE_LOGGER.info(f'START PROPHESY')
-                    # show_prophesy_selection( )
-
+                    pygame.display.flip()
+                    prophesy_selection_event()
+                    time.sleep(2)
             elif event.type == MOUSEBUTTONUP:
                 if event.button == 4:  # Mouse wheel rolled up
                     if board_scale + 0.1 > 2.9:  # If it is big enough. 2.9 (not 3) to prevent float type bugs
@@ -280,17 +285,19 @@ def show_prophesy_button(b: Surface, r: Rect): # place prophesy button a little 
     DISPLAY.blit(b, r)
 
 
-def show_prophesy_selection(b: Surface, r: Rect):  #
+def prophesy_selection_event():  # type:
 
     # dummy_prophesy_button = font(SMALL).render("进行占卜", True, BLACK) #占卜 button试做
     # dummy_prophesy_button_rect = dummy_prophesy_button.get_rect()
 
     # send a message to server: I want do a prophesy
+    p = Prophesy()  # class: web_events.Prophesy()
     # server send back result
     # show result on screen and adjust data
     a = 0
 
     # DISPLAY.blit(b,r)
+
 
 
 def terminate():

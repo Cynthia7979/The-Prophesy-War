@@ -49,6 +49,7 @@ def listen(sock: socket.socket):
     HOST_LOGGER.debug('Another loop of listening!')
     sock.listen()  # Parameter backlog is optional
     conn, addr = sock.accept()
+    conn.send(bytes("WELCOME TO THE HOST SERVER", "utf-8"))
     threads[(conn, addr)] = Thread(target=handle, args=(conn, addr))
     threads[(conn, addr)].run()
 

@@ -21,7 +21,9 @@ def main(room_id):
     r = web_events.unfold(r)
     if r.__class__ == web_events.RoomEvent:
         host_ip = r.message
+        SCENE_LOGGER.debug(host_ip)
     elif r.__class__ == web_events.Error:
+        PUBLIC_LOGGER.info(f'Server sent back some ERROR')
         return  # TODO Display some error message
     else:
         raise ValueError(f'Received non-Error and non-RoomEvent object from main server: {r.__class__}')
