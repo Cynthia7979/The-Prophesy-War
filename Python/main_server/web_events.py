@@ -51,8 +51,12 @@ class RoomEvent(WebEvent):
         super().__init__('room', message)
         self.message = message
 
-    def unfold(content):
-        return RoomEvent(content)
+    def unfold(content: str):
+        # ip = content.strip("(")
+        # ip = ip.strip('\'')  # and plenty more format thing to remove
+        # ip = ip[:ip.find(',')]
+        # return RoomEvent(ip)
+        return RoomEvent(content)  # RoomEvent还要在其他地方用
 
 
 class CreateRoomEvent(WebEvent):
@@ -93,7 +97,7 @@ class WebEventError(Exception):
 
 
 head_map = {'draw': DrawCardEvent, 'prop': Prophesy, 'eror': Error, 'room': RoomEvent, 'crte':CreateRoomEvent,
-            'join': JoinRoomEvent}# Link the head to specific `unfold` method.
+            'join': JoinRoomEvent}  # Link the head to specific `unfold` method.
 
 
 def unfold(e):
@@ -104,6 +108,7 @@ def unfold(e):
         raise ValueError(f'"{s}" is not a valid WebEvent')
     head, content = s.split('|')
     head = head.strip("b'")  # Socket connections use `bytes` type, like this: `b'bytes words'`
+    head = head.strip('b"')  # For double quotes
     content = content[:-1]   # We need to manually remove `b'` at the beginning and `'` in the end
     try:
         unfold_class = head_map[head]
@@ -113,9 +118,7 @@ def unfold(e):
 
 
 def send_event(conn, event):
-    s = str(event)
-    b = bytes(s, encoding='utf-8')  # did some debug thing
-    return conn.sendall(b)
+    return conn.sendall(bytes(str(event), encoding='utf-8'))
 
 
 # Some pre-defined WebEvents to use

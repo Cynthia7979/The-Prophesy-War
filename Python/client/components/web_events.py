@@ -47,13 +47,16 @@ class Prophesy(WebEvent):
 
 
 class RoomEvent(WebEvent):
-
     def __init__(self, message):
         super().__init__('room', message)
         self.message = message
 
-    def unfold(content):
-        return RoomEvent(content)
+    def unfold(content: str):
+        # ip = content.strip("(")
+        # ip = ip.strip('\'')  # and plenty more format thing to remove
+        # ip = ip[:ip.find(',')]
+        # return RoomEvent(ip)
+        return RoomEvent(content)  # RoomEvent还要在其他地方用
 
 
 class CreateRoomEvent(WebEvent):
@@ -97,29 +100,16 @@ head_map = {'draw': DrawCardEvent, 'prop': Prophesy, 'eror': Error, 'room': Room
             'join': JoinRoomEvent}  # Link the head to specific `unfold` method.
 
 
-
-
 def unfold(e):
     s = str(e)
-    # s = s[1:]  # theres a 'b' at the start, this removes it
     try:
         s.index('|')
     except ValueError:
         raise ValueError(f'"{s}" is not a valid WebEvent')
     head, content = s.split('|')
-    head = head.strip("'b")  # Socket connections use `bytes` type, like this: `b'bytes words'`
-    head = head.strip('"')   # and also a " <- this quote sign
+    head = head.strip("b'")  # Socket connections use `bytes` type, like this: `b'bytes words'`
+    head = head.strip('b"')  # For double quotes
     content = content[:-1]   # We need to manually remove `b'` at the beginning and `'` in the end
-
-    # b"room|('xxx.xxx.xxx.x\',xxxxx)"
-    if head == 'room':      # haven't progressed until others yet, but 'room' need these
-        content = content.strip("(")
-        content = content.strip('\'')         # and plenty more format thing to remove
-        content = content.strip(')')          # im too lazy to comment them 1 by 1,
-        comma_index = content.find(',')       # u can see what happens in debug mode
-        content = content[:comma_index-1]
-                                              # end result is 'xxx.xxx.xxx.xxx'
-                                              # which is 'ip'
     try:
         unfold_class = head_map[head]
     except KeyError:

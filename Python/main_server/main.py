@@ -51,7 +51,7 @@ def main():
 
     # dummy room testing related START
     # rooms = {}
-    dummy_room = room.Room("r", 2, 8)  # name=r, id=2, maxPlayer=8,
+    dummy_room = room.Room("r", 2, 8, HOST)  # name=r, id=2, maxPlayer=8, address=HOST
     rooms = {2: dummy_room, 16: dummy_room}  # {id: Room instance}; the dummy room is "Room 3"
 
     # dummy room testing related FINISH
@@ -78,7 +78,7 @@ def handle(conn:socket.socket, addr:tuple):
     event = unfold(request)
 
     # dummy room testing related START
-    rooms[2].set_address((HOST, PORT))
+    #rooms[2].address = HOST
     #rooms[2].set_address(addr)
 
     # dummy room testing related FINISH

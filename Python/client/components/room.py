@@ -3,14 +3,14 @@ from .global_variable import *
 
 
 class Room(object):
-    def __init__(self, room_name: str, room_id: int, max_players: int, address: tuple,
+    def __init__(self, room_name: str, room_id: int, max_players: int, address: str,
                  current_players={}, playing=False):
         """
         Initializes a Room object.
         :param room_name: Room name.
-        :param current_players: Dict of {address: playername}
+        :param current_players: Dict of {ip: playername}
         :param max_players: Max # of players.
-        :param address: Address of the host client, tuple of (host, port).
+        :param address: IP of the host client, string.
         :param current_players: Any preexisting players when creating the Room instance.
         :param playing: Is the room in game or waiting to start.
         """
@@ -50,8 +50,8 @@ class Room(object):
     def set_rect(self, rect):
         self.rect = rect
 
-    def add_player(self, new_player: str):
-        self.current_players.append(new_player)
+    def add_player(self, new_player: str, player_ip: str):
+        self.current_players[player_ip] = new_player
 
     def __gt__(self, other):
         if isinstance(other, Room):
@@ -87,6 +87,7 @@ class Room(object):
 def unfold(r):
     if type(r) == str:
         r = eval(r)
+    else: raise TypeError('Room unfold function received non-string object.')
     if type(r) != tuple:
         raise TypeError('Room unfold function received non-tuple-like string.')
 

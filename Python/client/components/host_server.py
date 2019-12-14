@@ -1,10 +1,8 @@
 """Host server"""
-"""Too much problems, I suggest rewrite ~Cynthia"""
+"""Rewriting ~Cynthia"""
 import threading
 import socket
-import selectors
-import random
-from . import room, human, board, web_events
+from room import Room
 from . import logger
 from .web_events import unfold
 
@@ -42,14 +40,13 @@ class Thread(threading.Thread):
 def main(room_name, room_id, max_players):
     global threads, host_room
     threads = {}
-    host_room = room.Room(room_name, room_id, max_players, address=(HOST, PORT))
+    host_room = room.Room(room_name, room_id, max_players, address=HOST)
 
 
 def listen(sock: socket.socket):
     HOST_LOGGER.debug('Another loop of listening!')
     sock.listen()  # Parameter backlog is optional
     conn, addr = sock.accept()
-    conn.send(bytes("WELCOME TO THE HOST SERVER", "utf-8"))
     threads[(conn, addr)] = Thread(target=handle, args=(conn, addr))
     threads[(conn, addr)].run()
 
@@ -57,10 +54,10 @@ def listen(sock: socket.socket):
 def handle(conn:socket.socket, addr:tuple):
     HOST_LOGGER.info(f'Handling connection from {addr}')
     if addr not in host_room.current_players.keys():
-        if host_room.max_players >= len(host_room.current_players):
+        if host_room.max_players >= len(host_room.current_players):  # If the room is full
             web_events.send_event(conn, web_events.FULL_ERROR)
         else:
-            web_events.send_event(conn, web_events.RoomEvent(str(host_room)))
+            web_events.send_event(conn, web_events.RoomEvent(str(host_room)))  # Give client the room instance
     request = conn.recv(1024)
     event = unfold(request)
     #if event.__class__ == web_events.JoinRoomEvent:
