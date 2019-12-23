@@ -1,5 +1,5 @@
 """
-Joins and shows the lobby of a room.
+Joins and displays the lobby of a room.
 """
 import socket
 from .. import room
@@ -30,7 +30,8 @@ def main(room_id):
 
     # Connect to host server
     host_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Use another sock to connect to room
-    host_sock.connect((host_ip, PORT))
+    host_sock.connect((host_ip, PORT))  # If the address is new to the host, it will comprehend it as requesting to
+    #                                     join.
     reply = host_sock.recv(1024)  # See if we succeed.
     if reply == web_events.FULL_ERROR:
         raise web_events.WebEventError('Room to join is full. This is due to the upper level function which called '
@@ -40,4 +41,6 @@ def main(room_id):
         event = web_events.unfold(reply)
         event_type = event.__class__
         if event_type == web_events.RoomEvent:
-            host_room = room.unfold(event.message)
+            host_room = room.unfold(event.message)  # str -> Room
+            host_sock.sendall()
+

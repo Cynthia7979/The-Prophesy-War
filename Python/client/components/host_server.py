@@ -2,7 +2,8 @@
 """Rewriting ~Cynthia"""
 import threading
 import socket
-from room import Room
+import web_events
+from .room import Room
 from . import logger
 from .web_events import unfold
 
@@ -53,11 +54,15 @@ def listen(sock: socket.socket):
 
 def handle(conn:socket.socket, addr:tuple):
     HOST_LOGGER.info(f'Handling connection from {addr}')
-    if addr not in host_room.current_players.keys():
+    if addr not in host_room.current_players.keys():  # When an address connects host server for the first time,
+                                                      # It wants to join the room
         if host_room.max_players >= len(host_room.current_players):  # If the room is full
-            web_events.send_event(conn, web_events.FULL_ERROR)
+            web_events.send_event(conn, web_events.FULL_ERROR)  # Then tell them
         else:
             web_events.send_event(conn, web_events.RoomEvent(str(host_room)))  # Give client the room instance
+                                                                               # (Including the host address)
     request = conn.recv(1024)
     event = unfold(request)
-    #if event.__class__ == web_events.JoinRoomEvent:
+    event_type = event.__class__
+    if event_type == web_events.JoinRoomEvent:
+        if self.
