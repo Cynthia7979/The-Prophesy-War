@@ -15,8 +15,9 @@ from . import logger
 pygame.font.init()
 
 # Socket
-PORT             = 50000
-SERVER           = '127.0.0.1'  # In this case, localhost
+SERVER_PORT            = 50000
+SERVER_HOST            = '127.0.0.1'  # In this case, localhost
+ROOM_PORT              = 51000
 
 
 # Colors R    G    B

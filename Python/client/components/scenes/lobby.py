@@ -10,7 +10,7 @@ from ..global_variable import *
 SCENE_LOGGER = logger.get_public_logger('lobby')
 
 
-def main(room_id):
+def main(room_id, player_name):
     # Connect to main server
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Server socket
     server_sock.connect((SERVER, PORT))  # Connect to main server (blocks the program)
@@ -32,6 +32,7 @@ def main(room_id):
     host_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Use another sock to connect to room
     host_sock.connect((host_ip, PORT))  # If the address is new to the host, it will comprehend it as requesting to
     #                                     join.
+    SCENE_LOGGER.debug('Connecting to '+host_ip+'...')
     reply = host_sock.recv(1024)  # See if we succeed.
     if reply == web_events.FULL_ERROR:
         raise web_events.WebEventError('Room to join is full. This is due to the upper level function which called '
@@ -42,5 +43,6 @@ def main(room_id):
         event_type = event.__class__
         if event_type == web_events.RoomEvent:
             host_room = room.unfold(event.message)  # str -> Room
-            host_sock.sendall()
+            SCENE_LOGGER.debug('Received room instance.')
+            web_events.send_event(host_sock, web_events.RoomEvent(player_name))
 

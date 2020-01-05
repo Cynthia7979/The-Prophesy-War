@@ -67,15 +67,18 @@ def listen(sock: socket.socket):
     PUBLIC_LOGGER.debug('Another loop of listening!')
     sock.listen()  # Parameter backlog is optional
     conn, addr = sock.accept()
-    PUBLIC_LOGGER.debug(str(type(addr)))
     threads[(conn, addr)] = Thread(target=handle, args=(conn, addr))
     threads[(conn, addr)].run()
 
 
 def handle(conn:socket.socket, addr:tuple):
     PUBLIC_LOGGER.info(f'Handling connection from {addr}')
-    request = conn.recv(1024)
+    try:
+        request = conn.recv(1024)
+    except ConnectionResetError:
+        return
     event = unfold(request)
+    ip, port = addr
 
     # dummy room testing related START
     #rooms[2].address = HOST
@@ -91,12 +94,30 @@ def handle(conn:socket.socket, addr:tuple):
             web_events.send_event(conn, web_events.Error(f'Cannot find room #{event.room_id}'))
             PUBLIC_LOGGER.info(f'SERVER Cannot find room #{event.room_id}')
             return
-    elif event.__class__ == web_events.Prophesy():
+    elif event.__class__ == web_events.Prophesy:
         try:
             web_events.send_event(conn, web_events.Prophesy(f'{(0,0),[1,2,3]}'))   # placeholder
         except KeyError:
             web_events.send_event(conn, web_events.Error(f'keyerror for Prophesy'))
             return
+    elif event.__class__ == web_events.CreateRoomEvent:
+        add_room(event.room_name, event.max_players, ip, conn)
+
+
+def add_room(room_name, max_players, addr, conn):
+    # I will try to switch to bitmap later, if necessary
+    all_ids = list(rooms.keys())
+    found_id = None
+    for i in range(100):
+        if i not in all_ids:
+            found_id = i
+            break
+        if i == 100:
+            PUBLIC_LOGGER.warning('Too many rooms! New room will not get a new id.')
+            web_events.send_event(conn, web_events.Error('Rooms present achieve maximum number (100).'))
+    rooms[found_id] = room.Room(room_name, found_id, max_players, addr)
+    web_events.send_event(conn, web_events.WebEvent('',found_id))
+    PUBLIC_LOGGER.info(f'Room created: "{room_name}" (#{found_id}) with a max player of {max_players}.')
 
 
 if __name__ == '__main__':

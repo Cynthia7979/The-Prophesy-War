@@ -14,8 +14,9 @@ from .json_editor import get_settings
 pygame.font.init()
 
 # Socket
-PORT             = 50000
-SERVER           = 'localhost'  # In this case, localhost
+SERVER_PORT            = 50000
+SERVER_HOST            = '127.0.0.1'  # In this case, localhost
+ROOM_PORT              = 51000
 
 # Pygame
 FPS              = 30  # Be careful changing this because it is associated with some animation speed...
