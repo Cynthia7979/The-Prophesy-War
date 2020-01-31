@@ -83,6 +83,15 @@ class JoinRoomEvent(WebEvent):
         return JoinRoomEvent(content)
 
 
+class PingEvent(WebEvent):
+    """Used every round to check if the server/client is still up."""
+    def __init__(self):
+        super().__init__('ping','')
+
+    def unfold(content:str):
+        return PingEvent()
+
+
 class Error(WebEvent):
     def __init__(self, message):
         super().__init__('eror', message)

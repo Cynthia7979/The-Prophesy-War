@@ -85,6 +85,7 @@ class Room(object):
 
 
 def unfold(r):
+    r = r.strip('\\')
     if type(r) == str:
         r = eval(r)
     else: raise TypeError('Room unfold function received non-string object.')

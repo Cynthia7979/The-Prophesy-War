@@ -11,6 +11,11 @@ SCENE_LOGGER = logger.get_public_logger('lobby')
 
 
 def main(room_id, player_name):
+    join_room(room_id, player_name)
+
+
+
+def join_room(room_id, player_name):
     # Connect to main server
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Server socket
     server_sock.connect((SERVER_HOST, SERVER_PORT))  # Connect to main server (blocks the program)
@@ -21,17 +26,16 @@ def main(room_id, player_name):
     r = web_events.unfold(r)
     if r.__class__ == web_events.RoomEvent:
         host_ip = r.message
-        SCENE_LOGGER.debug('Host IP: ' + host_ip)
+        SCENE_LOGGER.debug('Received host server IP: ' + host_ip)
     elif r.__class__ == web_events.Error:
         PUBLIC_LOGGER.info(f'Server sent back some ERROR')
         return  # TODO Display some error message
     else:
         raise ValueError(f'Received non-Error and non-RoomEvent object from main server: {r.__class__}')
-
     # Connect to host server
     host_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Use another sock to connect to room
-    host_sock.connect((host_ip, ROOM_PORT))  # If the address is new to the host, it will comprehend it as requesting to
-    #                                     join.
+    host_sock.connect((host_ip, ROOM_PORT))
+    # If the address is new to the host, it will comprehend it as a request to join.
     SCENE_LOGGER.debug('Connecting to '+host_ip+'...')
     reply = host_sock.recv(1024)  # See if we succeed.
     if reply == web_events.FULL_ERROR:
@@ -43,6 +47,5 @@ def main(room_id, player_name):
         event_type = event.__class__
         if event_type == web_events.RoomEvent:
             host_room = room.unfold(event.message)  # str -> Room
-            SCENE_LOGGER.debug('Received room instance.')
-            web_events.send_event(host_sock, web_events.RoomEvent(player_name))
-
+            SCENE_LOGGER.debug('Received Room instance.')
+            web_events.send_event(host_sock, web_events.RoomEvent(player_name))  # Create player
