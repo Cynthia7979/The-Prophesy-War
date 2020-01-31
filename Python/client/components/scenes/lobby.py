@@ -13,7 +13,7 @@ SCENE_LOGGER = logger.get_public_logger('lobby')
 def main(room_id, player_name):
     # Connect to main server
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Server socket
-    server_sock.connect((SERVER, PORT))  # Connect to main server (blocks the program)
+    server_sock.connect((SERVER_HOST, SERVER_PORT))  # Connect to main server (blocks the program)
     SCENE_LOGGER.debug('Connected to server!')
     server_sock.sendall(bytes(str(web_events.JoinRoomEvent(room_id)), encoding='utf-8'))  # Ask to join a room.
     SCENE_LOGGER.debug('Join room event sent!')
@@ -30,7 +30,7 @@ def main(room_id, player_name):
 
     # Connect to host server
     host_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Use another sock to connect to room
-    host_sock.connect((host_ip, PORT))  # If the address is new to the host, it will comprehend it as requesting to
+    host_sock.connect((host_ip, ROOM_PORT))  # If the address is new to the host, it will comprehend it as requesting to
     #                                     join.
     SCENE_LOGGER.debug('Connecting to '+host_ip+'...')
     reply = host_sock.recv(1024)  # See if we succeed.
