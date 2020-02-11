@@ -6,7 +6,7 @@ import random
 from . import web_events
 from .room import Room
 from . import logger
-from .web_events import unfold
+from .web_events import *
 from .global_variable import SERVER_HOST, SERVER_PORT, ROOM_PORT, FPS
 from pygame.time import Clock
 
@@ -29,8 +29,10 @@ class LoopingThread(threading.Thread):
             while not self.stopped:  # This line is added
                 if self._target:
                     self._target(*self._args, **self._kwargs)
+        except Exception as e:
+            self.exption = e
         finally:
-            print(f'Stopping thread {self.name}...')
+            print(f'Stopping thread {self.name}... ({self.exption if self.exption else None})')
             del self._target, self._args, self._kwargs
 
     def stop(self):
@@ -63,8 +65,10 @@ def main(room_name, max_players):
     host_sock.bind((HOST, ROOM_PORT))
     threads = {'LISTEN': LoopingThread(target=listen, args=(host_sock,), name='LISTEN')}
     threads['LISTEN'].run()
+    HOST_LOGGER.debug('Thread "LISTEN" run!')
 
     chat = Chat()
+    HOST_LOGGER.debug('Chat created!')
     status = 'LOBBY'
 
     while status == 'LOBBY':
@@ -85,15 +89,15 @@ def handle(conn:socket.socket, addr:tuple):
     if addr not in host_room.current_players.keys():  # When an address connects host server for the first time,
                                                       # It wants to join the room
         if host_room.max_players <= len(host_room.current_players):  # If the room is full
-            web_events.send_event(conn, web_events.FULL_ERROR)  # Then tell them
+            send_event(conn, FULL_ERROR)  # Then tell them
         else:
-            web_events.send_event(conn, web_events.RoomEvent(str(host_room)))
-            # Give client the room instance (Including the host address)
-            player_name = unfold(conn.recv(1024)).message
-            player_color = get_color()
-            host_room.add_player(player_name, player_ip, player_color)
-            HOST_LOGGER.info(f'Player "{player_name}" ({player_ip}) joined the room.')
-            chat.add_line(SYSTEM, f'Player "{player_name}" joined the room.')
+            add_player(conn, player_ip)
+            server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            server_sock.connect((SERVER_HOST, SERVER_PORT))
+            send_event(server_sock, UpdateRoomEvent(current_players=host_room.current_players))
+            reply = unfold(server_sock.recv(1024))
+            if reply != REQUEST_COMPLETE:
+                raise WebEventError('Request is not complete.')
     else:
         request = conn.recv(1024)
         event = unfold(request)
@@ -104,12 +108,13 @@ def create_room(room_name, max_players):
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_sock.connect((SERVER_HOST, SERVER_PORT))
     HOST_LOGGER.debug('Requesting room id.')
-    web_events.send_event(server_sock, web_events.CreateRoomEvent(room_name, max_players))
-    reply = web_events.unfold(server_sock.recv(1024))
-    if reply.__class__ == web_events.Error:
+    send_event(server_sock, CreateRoomEvent(room_name, max_players))
+    reply = unfold(server_sock.recv(1024))
+    if reply.__class__ == Error:
         raise OverflowError('Main server overflow.')
-    elif reply.__class__ == web_events.WebEvent:
+    elif reply.__class__ == RoomEvent:
         room_id = int(reply.content)
+        HOST_LOGGER.debug(f'ID: {room_id}')
     host_room = Room(room_name, room_id, max_players, address=HOST)
     HOST_LOGGER.info('Room created!')
     return host_room
@@ -122,3 +127,14 @@ def get_color():
     while new_color in existing_colors:
         new_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
     return new_color
+
+
+def add_player(conn, player_ip):
+    send_event(conn, RoomEvent(str(host_room)))
+    # Give client the room instance (Including the host address)
+    player_name = unfold(conn.recv(1024)).message  # Receive player name
+    player_color = get_color()
+    host_room.add_player(player_name, player_ip, player_color)  # Add the player
+    HOST_LOGGER.info(f'Player "{player_name}" ({player_ip}) joined the room.')
+    chat.add_line(SYSTEM, f'Player "`${"%02x%02x%02x" % player_color}${player_name}`" joined the room.')
+    # Add some color to their name

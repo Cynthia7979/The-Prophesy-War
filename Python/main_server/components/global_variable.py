@@ -31,31 +31,3 @@ PUBLIC_LOGGER = logger.get_public_logger('global_variable')  # Logger of global_
 font_cache = {}  # To prevent repetition
 
 
-def strip_styled_text(text):
-    """
-    Resolving styled text for external modules
-    :param text: Styled text
-    :return: `dict` {'text':hexcode}
-    """
-    result = {}
-    split = text.split('`')
-    for segment in split:
-        try:
-            hexcode = re.search('\$(.*)\$', segment).group(1)  # Try to find the HEX $colorcode$
-        except (AttributeError, ValueError):
-            hexcode = '000000'  # If there is no style, then it is interpreted as black (000000)
-        text = segment[segment.rfind('$') + 1:]  # Segment after colorcode. "$FF0000$This part"
-        result[text] = hexcode
-    return result
-
-
-def global_quit():
-    """
-    Terminates all other things before program quits.
-    Please update this function when you add something that needs extra quitting.
-    :return: None
-    """
-    pygame.font.quit()
-    pygame.quit()
-    logger.exit()
-    sys.exit()

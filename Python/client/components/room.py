@@ -21,10 +21,10 @@ class Room(object):
         self.max_players     = max_players
         self.playing         = playing
         self.address = address
-        self.surf = self.get_state_surf()  # Check client/components/scenes/select_room.py  TODO better implementation
-        self.rect = self.surf.get_rect()
+        # self.surf = self.get_state_surf()  # Check client/components/scenes/select_room.py  TODO better implementation
+        # self.rect = self.surf.get_rect()
 
-    def set_state(self, room_name: str = None, max_players: int = None,
+    def set_state(self, room_name: str = None, max_players: int = None, current_players: dict = None,
                   playing: bool = None):
         """
         Set (updates) the state of a room.
@@ -32,6 +32,7 @@ class Room(object):
         *Parameters*: Check __init__()
         """
         if room_name: self.room_name = room_name
+        if current_players: self.current_players = current_players
         if max_players: self.max_players = max_players
         if playing:   self.playing = playing
 

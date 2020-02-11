@@ -83,6 +83,34 @@ class JoinRoomEvent(WebEvent):
         return JoinRoomEvent(content)
 
 
+class UpdateRoomEvent(WebEvent):
+    def __init__(self, room_id:int, room_name: str = None, current_players: dict = None, max_players: int = None,
+                 playing: bool = None):
+        super().__init__('updt', '/'.join((room_id, room_name, current_players, max_players, playing)))  # 注意顺序
+        self.room_id = room_id
+        self.room_name = room_name
+        self.current_players = current_players
+        self.max_players = max_players
+        self.playing = playing
+
+    def unfold(content: str):
+        try:
+            content.index('/')
+        except ValueError:
+            raise ValueError(f'"{content}" is not an available CreateRoomEvent content')
+        room_id, room_name, current_players, max_players, playing = content.split('/')
+        return UpdateRoomEvent(room_id, room_name, current_players, max_players, playing)
+
+
+class PingEvent(WebEvent):
+    """Used every round to check if the server/client is still up."""
+    def __init__(self):
+        super().__init__('ping', '')
+
+    def unfold(content: str):
+        return PingEvent()
+
+
 class Error(WebEvent):
     def __init__(self, message):
         super().__init__('eror', message)
@@ -97,7 +125,7 @@ class WebEventError(Exception):
 
 
 head_map = {'draw': DrawCardEvent, 'prop': Prophesy, 'eror': Error, 'room': RoomEvent, 'crte':CreateRoomEvent,
-            'join': JoinRoomEvent}  # Link the head to specific `unfold` method.
+            'join': JoinRoomEvent, 'ping': PingEvent, 'updt': UpdateRoomEvent}  # Link the head to the specific class
 
 
 def unfold(e):
@@ -127,6 +155,8 @@ CONN_ACCEPTED = WebEvent('none', 'Connection accepted')
 FULL_ERROR = Error('Room is Full')
 
 JOIN_ACCEPTED = RoomEvent('Join room request accepted')
+
+REQUEST_COMPLETE = WebEvent('none', 'Request completed')
 
 if __name__ == '__main__':
     e = Prophesy(('one', 'two', 'three'))

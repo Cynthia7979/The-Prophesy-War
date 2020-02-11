@@ -14,7 +14,6 @@ def main(room_id, player_name):
     join_room(room_id, player_name)
 
 
-
 def join_room(room_id, player_name):
     # Connect to main server
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Server socket
@@ -28,7 +27,7 @@ def join_room(room_id, player_name):
         host_ip = r.message
         SCENE_LOGGER.debug('Received host server IP: ' + host_ip)
     elif r.__class__ == web_events.Error:
-        PUBLIC_LOGGER.info(f'Server sent back some ERROR')
+        PUBLIC_LOGGER.info(f'Server sent back some ERROR: {r.content}')
         return  # TODO Display some error message
     else:
         raise ValueError(f'Received non-Error and non-RoomEvent object from main server: {r.__class__}')

@@ -24,7 +24,7 @@ class Room(object):
         # self.surf = self.get_state_surf()  # Check client/components/scenes/select_room.py  TODO better implementation
         # self.rect = self.surf.get_rect()
 
-    def set_state(self, room_name: str = None, max_players: int = None, current_players: tuple = None,
+    def set_state(self, room_name: str = None, max_players: int = None, current_players: dict = None,
                   playing: bool = None):
         """
         Set (updates) the state of a room.
@@ -50,8 +50,8 @@ class Room(object):
     def set_rect(self, rect):
         self.rect = rect
 
-    def add_player(self, new_player: str, player_ip: str):
-        self.current_players[player_ip] = new_player
+    def add_player(self, player_name: str, player_ip: str, player_color:tuple):
+        self.current_players[player_ip] = (player_name, player_color)
 
     def __gt__(self, other):
         if isinstance(other, Room):
