@@ -65,7 +65,7 @@ def main(room_name, max_players):
     host_sock.bind((HOST, ROOM_PORT))
     threads = {'LISTEN': LoopingThread(target=listen, args=(host_sock,), name='LISTEN')}
     threads['LISTEN'].run()
-    HOST_LOGGER.debug('Thread "LISTEN" run!')
+    HOST_LOGGER.debug('Run thread "LISTEN" run!')
 
     chat = Chat()
     HOST_LOGGER.debug('Chat created!')
@@ -87,14 +87,15 @@ def handle(conn:socket.socket, addr:tuple):
     HOST_LOGGER.info(f'Handling connection from {addr}')
     player_ip = addr[0]
     if addr not in host_room.current_players.keys():  # When an address connects host server for the first time,
-                                                      # It wants to join the room
+                                                        # It wants to join the room
         if host_room.max_players <= len(host_room.current_players):  # If the room is full
             send_event(conn, FULL_ERROR)  # Then tell them
         else:
             add_player(conn, player_ip)
+            # Update room
             server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             server_sock.connect((SERVER_HOST, SERVER_PORT))
-            send_event(server_sock, UpdateRoomEvent(current_players=host_room.current_players))
+            send_event(server_sock, UpdateRoomEvent(host_room.room_id, current_players=host_room.current_players))
             reply = unfold(server_sock.recv(1024))
             if reply != REQUEST_COMPLETE:
                 raise WebEventError('Request is not complete.')
@@ -115,6 +116,7 @@ def create_room(room_name, max_players):
     elif reply.__class__ == RoomEvent:
         room_id = int(reply.content)
         HOST_LOGGER.debug(f'ID: {room_id}')
+    else: raise TypeError(f'Invalid WebEvent type: {reply.__class__}')
     host_room = Room(room_name, room_id, max_players, address=HOST)
     HOST_LOGGER.info('Room created!')
     return host_room
